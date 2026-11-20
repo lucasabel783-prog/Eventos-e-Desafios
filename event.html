@@ -1,0 +1,2531 @@
+<!doctype html>
+<html lang="pt-PT">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Evento | SnapQuest</title>
+    <meta
+      name="description"
+      content="Participa nos desafios e partilha os teus melhores momentos no SnapQuest."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/global.css" />
+    <link rel="stylesheet" href="css/participant.css" />
+
+    <style>
+      :root {
+        --sq-bg: #090b10;
+        --sq-surface: #11141c;
+        --sq-surface-2: #191d27;
+        --sq-border: rgba(255, 255, 255, 0.08);
+        --sq-text: #f5f6fa;
+        --sq-muted: #9299a9;
+        --sq-accent: #a78bfa;
+        --sq-accent-2: #7c5ce7;
+        --sq-green: #54d6a0;
+        --sq-red: #ff7272;
+        --sq-radius: 18px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--sq-bg);
+        color: var(--sq-text);
+        font-family: "DM Sans", sans-serif;
+      }
+
+      button,
+      input,
+      textarea,
+      select {
+        font: inherit;
+      }
+
+      button {
+        cursor: pointer;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .sq-topbar {
+        height: 76px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 6%;
+        border-bottom: 1px solid var(--sq-border);
+        background: rgba(9, 11, 16, 0.9);
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        backdrop-filter: blur(18px);
+      }
+
+      .sq-brand {
+        font-family: "Manrope", sans-serif;
+        font-size: 22px;
+        font-weight: 800;
+        letter-spacing: -1px;
+      }
+
+      .sq-brand span {
+        color: var(--sq-accent);
+      }
+
+      .sq-topbar-right {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        color: var(--sq-muted);
+        font-size: 13px;
+      }
+
+      .sq-status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+        background: var(--sq-green);
+        margin-right: 7px;
+      }
+
+      .sq-container {
+        width: min(1160px, 90%);
+        margin: 0 auto;
+      }
+
+      .sq-code-screen {
+        min-height: calc(100vh - 76px);
+        display: grid;
+        place-items: center;
+        padding: 40px 20px;
+      }
+
+      .sq-code-card {
+        width: min(440px, 100%);
+        padding: 38px;
+        background: var(--sq-surface);
+        border: 1px solid var(--sq-border);
+        border-radius: 24px;
+        text-align: center;
+      }
+
+      .sq-code-icon {
+        width: 66px;
+        height: 66px;
+        margin: 0 auto 22px;
+        display: grid;
+        place-items: center;
+        border-radius: 20px;
+        background: rgba(167, 139, 250, 0.13);
+        color: var(--sq-accent);
+        font-size: 28px;
+      }
+
+      .sq-code-card h1 {
+        font:
+          800 27px "Manrope",
+          sans-serif;
+        margin: 0 0 10px;
+      }
+
+      .sq-code-card p {
+        color: var(--sq-muted);
+        line-height: 1.6;
+        margin: 0 0 25px;
+      }
+
+      .sq-input {
+        width: 100%;
+        background: #0b0e14;
+        border: 1px solid var(--sq-border);
+        color: white;
+        padding: 15px 16px;
+        border-radius: 12px;
+        outline: none;
+        transition: 0.2s;
+      }
+
+      .sq-input:focus {
+        border-color: var(--sq-accent);
+        box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.12);
+      }
+
+      .sq-button {
+        border: 0;
+        padding: 13px 19px;
+        border-radius: 12px;
+        font-weight: 700;
+        background: var(--sq-accent);
+        color: #171022;
+        transition: 0.2s;
+      }
+
+      .sq-button:hover {
+        background: #bba7ff;
+        transform: translateY(-1px);
+      }
+
+      .sq-button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .sq-button-secondary {
+        background: var(--sq-surface-2);
+        color: white;
+        border: 1px solid var(--sq-border);
+      }
+
+      .sq-button-secondary:hover {
+        background: #242938;
+      }
+
+      .sq-full {
+        width: 100%;
+      }
+
+      .sq-error {
+        color: var(--sq-red);
+        font-size: 13px;
+        margin-top: 13px;
+        min-height: 18px;
+      }
+
+      .sq-hidden {
+        display: none !important;
+      }
+
+      .sq-event-hero {
+        position: relative;
+        min-height: 330px;
+        margin-top: 30px;
+        overflow: hidden;
+        border: 1px solid var(--sq-border);
+        border-radius: 24px;
+        background:
+          radial-gradient(
+            circle at 80% 20%,
+            rgba(124, 92, 231, 0.3),
+            transparent 35%
+          ),
+          linear-gradient(120deg, #191d2b, #10131b 70%);
+        display: flex;
+        align-items: flex-end;
+      }
+
+      .sq-event-cover {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0.35;
+      }
+
+      .sq-event-hero::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          90deg,
+          rgba(9, 11, 16, 0.92),
+          rgba(9, 11, 16, 0.25)
+        );
+      }
+
+      .sq-event-info {
+        position: relative;
+        z-index: 1;
+        padding: 42px;
+        max-width: 760px;
+      }
+
+      .sq-event-tag {
+        display: inline-flex;
+        padding: 7px 11px;
+        border: 1px solid rgba(167, 139, 250, 0.3);
+        background: rgba(167, 139, 250, 0.12);
+        color: #c4b5fd;
+        border-radius: 30px;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 17px;
+      }
+
+      .sq-event-info h1 {
+        font:
+          800 clamp(30px, 5vw, 48px) "Manrope",
+          sans-serif;
+        letter-spacing: -1.8px;
+        margin: 0 0 12px;
+      }
+
+      .sq-event-info p {
+        color: #c2c5d0;
+        line-height: 1.7;
+        margin: 0;
+        max-width: 600px;
+      }
+
+      .sq-event-date {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        color: #d0c7ef;
+        margin-top: 22px;
+        font-size: 13px;
+      }
+
+      .sq-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        margin: 20px 0 35px;
+      }
+
+      .sq-stat {
+        padding: 19px;
+        background: var(--sq-surface);
+        border: 1px solid var(--sq-border);
+        border-radius: 15px;
+      }
+
+      .sq-stat strong {
+        display: block;
+        font:
+          800 26px "Manrope",
+          sans-serif;
+        margin-bottom: 4px;
+      }
+
+      .sq-stat span {
+        font-size: 12px;
+        color: var(--sq-muted);
+      }
+
+      .sq-section {
+        margin: 42px 0;
+      }
+
+      .sq-section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .sq-section-header h2 {
+        font:
+          800 23px "Manrope",
+          sans-serif;
+        margin: 0 0 5px;
+      }
+
+      .sq-section-header p {
+        color: var(--sq-muted);
+        font-size: 13px;
+        margin: 0;
+      }
+
+      .sq-tabs {
+        display: flex;
+        gap: 8px;
+        border-bottom: 1px solid var(--sq-border);
+        overflow-x: auto;
+        margin-top: 32px;
+      }
+
+      .sq-tab {
+        padding: 14px 17px;
+        color: var(--sq-muted);
+        background: none;
+        border: 0;
+        border-bottom: 2px solid transparent;
+        white-space: nowrap;
+        font-weight: 700;
+        font-size: 13px;
+      }
+
+      .sq-tab.active {
+        color: var(--sq-accent);
+        border-bottom-color: var(--sq-accent);
+      }
+
+      .sq-panel {
+        display: none;
+        padding: 25px 0;
+      }
+
+      .sq-panel.active {
+        display: block;
+      }
+
+      .sq-challenge-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 17px;
+      }
+
+      .sq-challenge {
+        background: var(--sq-surface);
+        border: 1px solid var(--sq-border);
+        border-radius: var(--sq-radius);
+        overflow: hidden;
+        transition: 0.2s;
+      }
+
+      .sq-challenge:hover {
+        border-color: rgba(167, 139, 250, 0.4);
+        transform: translateY(-3px);
+      }
+
+      .sq-challenge-image {
+        height: 155px;
+        background: linear-gradient(135deg, #222638, #171b26);
+        display: grid;
+        place-items: center;
+        color: #777f95;
+        font-size: 28px;
+        overflow: hidden;
+      }
+
+      .sq-challenge-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .sq-challenge-content {
+        padding: 18px;
+      }
+
+      .sq-challenge-content h3 {
+        font:
+          700 16px "Manrope",
+          sans-serif;
+        margin: 0 0 8px;
+      }
+
+      .sq-challenge-content p {
+        color: var(--sq-muted);
+        font-size: 13px;
+        line-height: 1.6;
+        min-height: 40px;
+        margin: 0 0 15px;
+      }
+
+      .sq-challenge-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+
+      .sq-pill {
+        padding: 6px 9px;
+        border-radius: 30px;
+        background: var(--sq-surface-2);
+        color: var(--sq-muted);
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      .sq-pill.available {
+        color: var(--sq-green);
+        background: rgba(84, 214, 160, 0.1);
+      }
+
+      .sq-pill.ended {
+        color: #ffb86b;
+        background: rgba(255, 184, 107, 0.1);
+      }
+
+      .sq-empty {
+        padding: 48px 20px;
+        text-align: center;
+        border: 1px dashed var(--sq-border);
+        border-radius: var(--sq-radius);
+        color: var(--sq-muted);
+      }
+
+      .sq-empty-icon {
+        font-size: 30px;
+        margin-bottom: 12px;
+      }
+
+      .sq-empty h3 {
+        color: var(--sq-text);
+        margin: 0 0 8px;
+      }
+
+      .sq-empty p {
+        margin: 0;
+        font-size: 13px;
+      }
+
+      .sq-gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+      }
+
+      .sq-gallery-item {
+        background: var(--sq-surface);
+        border: 1px solid var(--sq-border);
+        border-radius: 15px;
+        overflow: hidden;
+      }
+
+      .sq-gallery-item img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+        background: var(--sq-surface-2);
+      }
+
+      .sq-gallery-caption {
+        padding: 12px;
+        font-size: 12px;
+        color: var(--sq-muted);
+      }
+
+      .sq-ranking-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .sq-ranking-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 15px;
+        background: var(--sq-surface);
+        border: 1px solid var(--sq-border);
+        border-radius: 13px;
+      }
+
+      .sq-ranking-position {
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        border-radius: 10px;
+        background: var(--sq-surface-2);
+        font-weight: 800;
+      }
+
+      .sq-ranking-name {
+        flex: 1;
+        font-weight: 700;
+      }
+
+      .sq-ranking-points {
+        color: var(--sq-accent);
+        font-weight: 800;
+      }
+
+      .sq-join-card {
+        margin: 30px 0;
+        padding: 25px;
+        background: var(--sq-surface);
+        border: 1px solid var(--sq-border);
+        border-radius: var(--sq-radius);
+      }
+
+      .sq-join-card h2 {
+        margin: 0 0 8px;
+        font:
+          800 21px "Manrope",
+          sans-serif;
+      }
+
+      .sq-join-card p {
+        color: var(--sq-muted);
+        margin: 0 0 20px;
+        font-size: 13px;
+      }
+
+      .sq-join-form {
+        display: flex;
+        gap: 10px;
+      }
+
+      .sq-join-form .sq-input {
+        flex: 1;
+      }
+
+      .sq-profile {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        padding: 18px 20px;
+        margin: 22px 0;
+        background: rgba(167, 139, 250, 0.08);
+        border: 1px solid rgba(167, 139, 250, 0.2);
+        border-radius: 15px;
+      }
+
+      .sq-profile small {
+        display: block;
+        color: var(--sq-muted);
+        margin-bottom: 4px;
+      }
+
+      .sq-profile strong {
+        font-size: 15px;
+      }
+
+      .sq-upload-card {
+        padding: 25px;
+        background: var(--sq-surface);
+        border: 1px solid var(--sq-border);
+        border-radius: var(--sq-radius);
+      }
+
+      .sq-upload-card h3 {
+        margin: 0 0 8px;
+        font:
+          700 18px "Manrope",
+          sans-serif;
+      }
+
+      .sq-upload-card > p {
+        color: var(--sq-muted);
+        font-size: 13px;
+        margin: 0 0 20px;
+      }
+
+      .sq-form-group {
+        margin-bottom: 16px;
+      }
+
+      .sq-form-group label {
+        display: block;
+        font-size: 12px;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+
+      .sq-form-group textarea {
+        resize: vertical;
+        min-height: 85px;
+      }
+
+      .sq-file-label {
+        display: block;
+        padding: 22px;
+        text-align: center;
+        border: 1px dashed rgba(167, 139, 250, 0.4);
+        border-radius: 13px;
+        color: var(--sq-muted);
+        cursor: pointer;
+        background: rgba(167, 139, 250, 0.04);
+      }
+
+      .sq-file-label:hover {
+        background: rgba(167, 139, 250, 0.09);
+      }
+
+      .sq-file-label strong {
+        display: block;
+        color: var(--sq-text);
+        margin-bottom: 5px;
+      }
+
+      .sq-file-label input {
+        display: none;
+      }
+
+      .sq-preview {
+        width: 100%;
+        max-height: 260px;
+        object-fit: contain;
+        border-radius: 12px;
+        margin-top: 14px;
+      }
+
+      .sq-footer {
+        border-top: 1px solid var(--sq-border);
+        padding: 30px 5%;
+        text-align: center;
+        color: var(--sq-muted);
+        font-size: 12px;
+        margin-top: 65px;
+      }
+
+      .sq-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        background: rgba(0, 0, 0, 0.8);
+        display: grid;
+        place-items: center;
+        padding: 20px;
+      }
+
+      .sq-modal-content {
+        width: min(480px, 100%);
+        padding: 28px;
+        border: 1px solid var(--sq-border);
+        background: var(--sq-surface);
+        border-radius: 20px;
+      }
+
+      .sq-modal-content h2 {
+        margin-top: 0;
+        font-family: "Manrope", sans-serif;
+      }
+
+      .sq-toast {
+        position: fixed;
+        right: 22px;
+        bottom: 22px;
+        z-index: 200;
+        max-width: 340px;
+        padding: 14px 18px;
+        border: 1px solid var(--sq-border);
+        border-radius: 12px;
+        background: #1b2030;
+        color: white;
+        font-size: 13px;
+        opacity: 0;
+        transform: translateY(10px);
+        pointer-events: none;
+        transition: 0.25s;
+      }
+
+      .sq-toast.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .sq-toast[data-type="error"] {
+        border-color: rgba(255, 114, 114, 0.5);
+      }
+
+      .sq-toast[data-type="success"] {
+        border-color: rgba(84, 214, 160, 0.4);
+      }
+
+      @media (max-width: 850px) {
+        .sq-challenge-grid,
+        .sq-gallery-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 600px) {
+        .sq-topbar {
+          padding: 0 5%;
+          height: 65px;
+        }
+
+        .sq-container {
+          width: 92%;
+        }
+
+        .sq-event-hero {
+          min-height: 300px;
+        }
+
+        .sq-event-info {
+          padding: 25px;
+        }
+
+        .sq-stats {
+          gap: 8px;
+        }
+
+        .sq-stat {
+          padding: 13px;
+        }
+
+        .sq-stat strong {
+          font-size: 21px;
+        }
+
+        .sq-stat span {
+          font-size: 10px;
+        }
+
+        .sq-challenge-grid,
+        .sq-gallery-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .sq-join-form {
+          flex-direction: column;
+        }
+
+        .sq-section-header {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .sq-code-card {
+          padding: 27px 22px;
+        }
+      }
+
+      /* =========================================
+   SNAPQUEST — NOVA IDENTIDADE VISUAL
+   Colorida, divertida e dinâmica
+========================================= */
+
+      :root {
+        --sq-bg: #fffaf5;
+        --sq-surface: #ffffff;
+        --sq-surface-2: #fff1e7;
+        --sq-border: #f1e5dc;
+        --sq-text: #29243d;
+        --sq-muted: #888397;
+        --sq-accent: #ff765e;
+        --sq-accent-2: #f04f83;
+        --sq-green: #32b987;
+        --sq-red: #f05d65;
+        --sq-radius: 22px;
+      }
+
+      body {
+        background:
+          radial-gradient(circle at 5% 15%, #ffe9dc 0, transparent 25%),
+          radial-gradient(circle at 95% 35%, #eee7ff 0, transparent 26%),
+          #fffaf5;
+        color: var(--sq-text);
+      }
+
+      /* TOPBAR */
+
+      .sq-topbar {
+        height: 72px;
+        background: rgba(255, 250, 245, 0.88);
+        border-bottom: 1px solid #f2e5dc;
+        box-shadow: 0 4px 25px rgba(65, 43, 35, 0.04);
+      }
+
+      .sq-brand {
+        font-size: 25px;
+        color: #302642;
+      }
+
+      .sq-brand span {
+        color: #ff765e;
+      }
+
+      .sq-topbar-right {
+        color: #777187;
+        font-weight: 700;
+      }
+
+      .sq-status-dot {
+        background: #32c58c;
+        box-shadow: 0 0 0 4px rgba(50, 197, 140, 0.13);
+      }
+
+      /* ENTRADA POR CÓDIGO */
+
+      .sq-code-card {
+        background: white;
+        border: 1px solid #f1e5dc;
+        box-shadow: 0 20px 70px rgba(78, 53, 43, 0.09);
+        border-radius: 28px;
+      }
+
+      .sq-code-icon {
+        background: linear-gradient(135deg, #ff8065, #ffb45f);
+        color: white;
+        border-radius: 22px;
+        box-shadow: 0 10px 25px rgba(255, 118, 94, 0.25);
+      }
+
+      .sq-code-card h1 {
+        color: #302642;
+        letter-spacing: -1px;
+      }
+
+      .sq-code-card p {
+        color: #898397;
+      }
+
+      .sq-input {
+        background: #fffaf7;
+        border: 1px solid #eee2da;
+        color: #302642;
+        border-radius: 14px;
+      }
+
+      .sq-input:focus {
+        border-color: #ff8065;
+        box-shadow: 0 0 0 4px rgba(255, 128, 101, 0.13);
+      }
+
+      /* BOTÕES */
+
+      .sq-button {
+        background: linear-gradient(135deg, #ff8065, #f45d83);
+        color: white;
+        border-radius: 13px;
+        box-shadow: 0 5px 14px rgba(244, 93, 131, 0.16);
+        transition:
+          transform 0.25s,
+          box-shadow 0.25s,
+          filter 0.25s;
+      }
+
+      .sq-button:hover {
+        background: linear-gradient(135deg, #ff9278, #f66c91);
+        transform: translateY(-3px);
+        box-shadow: 0 9px 20px rgba(244, 93, 131, 0.23);
+      }
+
+      .sq-button-secondary {
+        background: #fff0e9;
+        color: #ed705e;
+        border: 1px solid #ffdfd3;
+        box-shadow: none;
+      }
+
+      .sq-button-secondary:hover {
+        background: #ffe4da;
+        color: #df594e;
+      }
+
+      /* HERO DO EVENTO */
+
+      .sq-event-hero {
+        min-height: 370px;
+        margin-top: 35px;
+        border: 0;
+        border-radius: 30px;
+        background:
+          radial-gradient(
+            circle at 80% 10%,
+            rgba(255, 199, 102, 0.8),
+            transparent 30%
+          ),
+          radial-gradient(
+            circle at 90% 90%,
+            rgba(245, 93, 131, 0.65),
+            transparent 35%
+          ),
+          linear-gradient(120deg, #ff8269, #f36b91 55%, #a88af4);
+        box-shadow: 0 18px 45px rgba(222, 104, 119, 0.18);
+      }
+
+      .sq-event-cover {
+        opacity: 0.32;
+        mix-blend-mode: multiply;
+      }
+
+      .sq-event-hero::after {
+        background: linear-gradient(
+          90deg,
+          rgba(65, 35, 63, 0.78),
+          rgba(65, 35, 63, 0.12)
+        );
+      }
+
+      .sq-event-info {
+        padding: 48px;
+      }
+
+      .sq-event-tag {
+        color: white;
+        background: rgba(255, 255, 255, 0.18);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(8px);
+        letter-spacing: 1.5px;
+      }
+
+      .sq-event-info h1 {
+        color: white;
+        font-size: clamp(34px, 5vw, 55px);
+        letter-spacing: -2px;
+        text-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+      }
+
+      .sq-event-info p {
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .sq-event-date {
+        color: white;
+        font-weight: 700;
+        background: rgba(255, 255, 255, 0.15);
+        padding: 10px 14px;
+        border-radius: 30px;
+      }
+
+      /* ESTATÍSTICAS */
+
+      .sq-stats {
+        gap: 17px;
+        margin: 24px 0 40px;
+      }
+
+      .sq-stat {
+        position: relative;
+        overflow: hidden;
+        background: white;
+        border: 1px solid #f1e5dc;
+        border-radius: 20px;
+        padding: 23px;
+        box-shadow: 0 8px 25px rgba(65, 43, 35, 0.045);
+        transition:
+          transform 0.25s,
+          box-shadow 0.25s;
+      }
+
+      .sq-stat:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 14px 30px rgba(65, 43, 35, 0.09);
+      }
+
+      .sq-stat:nth-child(1) {
+        border-top: 4px solid #ff8065;
+      }
+
+      .sq-stat:nth-child(2) {
+        border-top: 4px solid #9d83ef;
+      }
+
+      .sq-stat:nth-child(3) {
+        border-top: 4px solid #35c49a;
+      }
+
+      .sq-stat strong {
+        color: #302642;
+        font-size: 30px;
+      }
+
+      .sq-stat span {
+        color: #898397;
+        font-weight: 600;
+      }
+
+      /* NAVEGAÇÃO */
+
+      .sq-tabs {
+        gap: 8px;
+        border: 0;
+        padding: 7px;
+        background: white;
+        border-radius: 17px;
+        box-shadow: 0 5px 20px rgba(65, 43, 35, 0.05);
+      }
+
+      .sq-tab {
+        border: 0;
+        border-radius: 12px;
+        padding: 13px 19px;
+        color: #898397;
+        transition: 0.2s;
+      }
+
+      .sq-tab:hover {
+        background: #fff1e9;
+        color: #f06d63;
+      }
+
+      .sq-tab.active {
+        background: linear-gradient(135deg, #ff8065, #f45d83);
+        color: white;
+        border: 0;
+        box-shadow: 0 5px 13px rgba(244, 93, 131, 0.2);
+      }
+
+      /* SECÇÕES */
+
+      .sq-section-header h2 {
+        color: #302642;
+        letter-spacing: -0.7px;
+        font-size: 25px;
+      }
+
+      .sq-section-header p {
+        color: #898397;
+      }
+
+      /* DESAFIOS */
+
+      .sq-challenge {
+        background: white;
+        border: 1px solid #f0e5dd;
+        border-radius: 21px;
+        box-shadow: 0 7px 25px rgba(65, 43, 35, 0.045);
+        transition:
+          transform 0.3s,
+          box-shadow 0.3s,
+          border-color 0.3s;
+      }
+
+      .sq-challenge:hover {
+        transform: translateY(-7px) rotate(-0.3deg);
+        border-color: #ffc5b6;
+        box-shadow: 0 17px 35px rgba(65, 43, 35, 0.1);
+      }
+
+      .sq-challenge-image {
+        background: linear-gradient(135deg, #ffe2d5, #eee5ff);
+        color: #ef806b;
+      }
+
+      .sq-challenge-content h3 {
+        color: #302642;
+        font-size: 17px;
+      }
+
+      .sq-challenge-content p {
+        color: #898397;
+      }
+
+      .sq-pill {
+        background: #f4f0f6;
+        color: #81788f;
+      }
+
+      .sq-pill.available {
+        background: #e2f8ed;
+        color: #20a879;
+      }
+
+      .sq-pill.ended {
+        background: #fff0db;
+        color: #d18b32;
+      }
+
+      /* GALERIA */
+
+      .sq-gallery-grid {
+        gap: 18px;
+      }
+
+      .sq-gallery-item {
+        background: white;
+        border: 1px solid #f0e5dd;
+        border-radius: 20px;
+        box-shadow: 0 7px 25px rgba(65, 43, 35, 0.05);
+        transition:
+          transform 0.3s,
+          box-shadow 0.3s;
+      }
+
+      .sq-gallery-item:hover {
+        transform: translateY(-6px) scale(1.015);
+        box-shadow: 0 15px 30px rgba(65, 43, 35, 0.12);
+      }
+
+      .sq-gallery-item img {
+        aspect-ratio: 4 / 3;
+        transition: transform 0.4s;
+      }
+
+      .sq-gallery-item:hover img {
+        transform: scale(1.035);
+      }
+
+      .sq-gallery-caption {
+        color: #777187;
+        padding: 15px;
+        font-weight: 600;
+      }
+
+      /* RANKING */
+
+      .sq-ranking-item {
+        background: white;
+        border: 1px solid #f0e5dd;
+        border-radius: 17px;
+        box-shadow: 0 5px 18px rgba(65, 43, 35, 0.04);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+
+      .sq-ranking-item:hover {
+        transform: translateX(5px);
+        box-shadow: 0 8px 22px rgba(65, 43, 35, 0.08);
+      }
+
+      .sq-ranking-item:nth-child(1) {
+        background: linear-gradient(100deg, #fff5d8, #ffffff);
+        border-color: #f7df9b;
+      }
+
+      .sq-ranking-item:nth-child(2) {
+        background: linear-gradient(100deg, #f1f0ff, #ffffff);
+      }
+
+      .sq-ranking-item:nth-child(3) {
+        background: linear-gradient(100deg, #ffede3, #ffffff);
+      }
+
+      .sq-ranking-position {
+        background: #fff0e9;
+        color: #ed705e;
+        border-radius: 12px;
+      }
+
+      .sq-ranking-item:nth-child(1) .sq-ranking-position {
+        background: #ffe4a3;
+        color: #a76d13;
+      }
+
+      .sq-ranking-item:nth-child(2) .sq-ranking-position {
+        background: #e5e1ff;
+        color: #7461c7;
+      }
+
+      .sq-ranking-item:nth-child(3) .sq-ranking-position {
+        background: #ffdfcb;
+        color: #bd7047;
+      }
+
+      .sq-ranking-name {
+        color: #302642;
+      }
+
+      .sq-ranking-points {
+        color: #f06d63;
+      }
+
+      /* ENTRADA E PERFIL */
+
+      .sq-join-card,
+      .sq-upload-card {
+        background: white;
+        border: 1px solid #f0e5dd;
+        border-radius: 22px;
+        box-shadow: 0 8px 28px rgba(65, 43, 35, 0.05);
+      }
+
+      .sq-join-card h2,
+      .sq-upload-card h3 {
+        color: #302642;
+      }
+
+      .sq-join-card p,
+      .sq-upload-card > p {
+        color: #898397;
+      }
+
+      .sq-profile {
+        background: linear-gradient(100deg, #fff0e9, #fff8f1);
+        border: 1px solid #ffdfd3;
+        border-radius: 18px;
+      }
+
+      .sq-profile small {
+        color: #898397;
+      }
+
+      .sq-profile strong {
+        color: #302642;
+      }
+
+      /* FORMULÁRIO DE FOTOGRAFIA */
+
+      .sq-form-group label {
+        color: #49415a;
+      }
+
+      .sq-file-label {
+        background: #fff8f4;
+        border: 2px dashed #ffc2b0;
+        border-radius: 17px;
+        transition: 0.25s;
+      }
+
+      .sq-file-label:hover {
+        background: #fff0e9;
+        border-color: #ff8065;
+      }
+
+      .sq-file-label strong {
+        color: #ed705e;
+      }
+
+      .sq-preview {
+        border: 3px solid #ffe3d9;
+        background: #fff8f4;
+      }
+
+      /* ESTADOS VAZIOS */
+
+      .sq-empty {
+        background: rgba(255, 255, 255, 0.75);
+        border: 2px dashed #f0dcd2;
+        border-radius: 20px;
+        padding: 55px 20px;
+      }
+
+      .sq-empty-icon {
+        font-size: 38px;
+        color: #ff8065;
+      }
+
+      .sq-empty h3 {
+        color: #302642;
+      }
+
+      .sq-empty p {
+        color: #898397;
+      }
+
+      /* MODAL */
+
+      .sq-modal {
+        background: rgba(39, 29, 48, 0.55);
+        backdrop-filter: blur(7px);
+      }
+
+      .sq-modal-content {
+        background: white;
+        border: 1px solid #f0e5dd;
+        border-radius: 23px;
+        box-shadow: 0 25px 80px rgba(39, 29, 48, 0.2);
+      }
+
+      .sq-modal-content h2 {
+        color: #302642;
+      }
+
+      /* FOOTER */
+
+      .sq-footer {
+        border-color: #f0e5dd;
+        color: #898397;
+      }
+
+      /* TOAST */
+
+      .sq-toast {
+        background: white;
+        color: #302642;
+        border: 1px solid #f0e5dd;
+        box-shadow: 0 10px 35px rgba(39, 29, 48, 0.12);
+        border-radius: 15px;
+      }
+
+      /* ANIMAÇÕES */
+
+      @keyframes sq-fade-up {
+        from {
+          opacity: 0;
+          transform: translateY(18px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .sq-event-hero {
+        animation: sq-fade-up 0.65s ease both;
+      }
+
+      .sq-stat {
+        animation: sq-fade-up 0.55s ease both;
+      }
+
+      .sq-stat:nth-child(2) {
+        animation-delay: 0.08s;
+      }
+
+      .sq-stat:nth-child(3) {
+        animation-delay: 0.16s;
+      }
+
+      .sq-challenge,
+      .sq-gallery-item,
+      .sq-ranking-item {
+        animation: sq-fade-up 0.4s ease both;
+      }
+
+      .sq-panel.active {
+        animation: sq-fade-up 0.35s ease both;
+      }
+
+      .sq-button:active {
+        transform: scale(0.97);
+      }
+
+      /* ACESSIBILIDADE E TELEMÓVEIS */
+
+      @media (max-width: 600px) {
+        .sq-event-hero {
+          min-height: 330px;
+          border-radius: 23px;
+        }
+
+        .sq-event-info {
+          padding: 25px;
+        }
+
+        .sq-event-info h1 {
+          font-size: 34px;
+        }
+
+        .sq-stats {
+          gap: 9px;
+        }
+
+        .sq-stat {
+          padding: 14px 10px;
+          border-radius: 15px;
+        }
+
+        .sq-stat strong {
+          font-size: 23px;
+        }
+
+        .sq-tabs {
+          border-radius: 13px;
+          padding: 5px;
+        }
+
+        .sq-tab {
+          padding: 12px 13px;
+          font-size: 12px;
+        }
+
+        .sq-challenge-grid,
+        .sq-gallery-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="sq-topbar">
+      <a href="index.html" class="sq-brand"> SNAP<span>QUEST</span> </a>
+
+      <div class="sq-topbar-right">
+        <span><i class="sq-status-dot"></i> Plataforma ativa</span>
+      </div>
+    </header>
+
+    <!-- ENTRADA POR CÓDIGO -->
+
+    <section id="codeScreen" class="sq-code-screen">
+      <div class="sq-code-card">
+        <div class="sq-code-icon">✦</div>
+
+        <h1>Entra num evento</h1>
+
+        <p>
+          Introduz o código partilhado pelo organizador para descobrires os
+          desafios.
+        </p>
+
+        <form id="codeForm">
+          <input
+            class="sq-input"
+            id="eventCodeInput"
+            type="text"
+            inputmode="numeric"
+            maxlength="6"
+            placeholder="Ex.: 000001"
+            autocomplete="off"
+            required
+          />
+
+          <button
+            class="sq-button sq-full"
+            type="submit"
+            style="margin-top: 12px"
+          >
+            Encontrar evento
+          </button>
+
+          <div id="codeError" class="sq-error"></div>
+        </form>
+      </div>
+    </section>
+
+    <!-- CONTEÚDO DO EVENTO -->
+
+    <main id="eventScreen" class="sq-container sq-hidden">
+      <section class="sq-event-hero">
+        <img id="eventCover" class="sq-event-cover sq-hidden" alt="" />
+
+        <div class="sq-event-info">
+          <span class="sq-event-tag">SNAPQUEST EVENT</span>
+
+          <h1 id="eventTitle">A carregar evento...</h1>
+
+          <p id="eventDescription"></p>
+
+          <div class="sq-event-date" id="eventDate"></div>
+        </div>
+      </section>
+
+      <!-- ENTRADA DO PARTICIPANTE -->
+
+      <section id="joinSection" class="sq-join-card sq-hidden">
+        <h2>Faz parte deste evento</h2>
+
+        <p>
+          Escolhe o nome que será apresentado nas tuas participações. Não
+          precisas de criar uma conta tradicional.
+        </p>
+
+        <form id="participantForm" class="sq-join-form">
+          <input
+            class="sq-input"
+            id="participantName"
+            name="name"
+            type="text"
+            minlength="2"
+            maxlength="30"
+            placeholder="O teu nome"
+            autocomplete="nickname"
+            required
+          />
+
+          <button class="sq-button" type="submit">Entrar no evento</button>
+        </form>
+      </section>
+
+      <!-- PERFIL -->
+
+      <section id="profileSection" class="sq-profile sq-hidden">
+        <div>
+          <small>Estás a participar como</small>
+          <strong id="profileName">Participante</strong>
+        </div>
+
+        <button
+          class="sq-button sq-button-secondary"
+          id="changeNameButton"
+          type="button"
+        >
+          Alterar nome
+        </button>
+      </section>
+
+      <!-- ESTATÍSTICAS -->
+
+      <section class="sq-stats">
+        <div class="sq-stat">
+          <strong id="participantCount">0</strong>
+          <span>Participantes</span>
+        </div>
+
+        <div class="sq-stat">
+          <strong id="challengeCount">0</strong>
+          <span>Desafios</span>
+        </div>
+
+        <div class="sq-stat">
+          <strong id="photoCount">0</strong>
+          <span>Fotografias</span>
+        </div>
+      </section>
+
+      <!-- NAVEGAÇÃO -->
+
+      <nav class="sq-tabs">
+        <button class="sq-tab active" data-tab="challenges" type="button">
+          Desafios
+        </button>
+
+        <button class="sq-tab" data-tab="gallery" type="button">Galeria</button>
+
+        <button class="sq-tab" data-tab="ranking" type="button">Ranking</button>
+
+        <button class="sq-tab" data-tab="submit" type="button">
+          Enviar fotografia
+        </button>
+      </nav>
+
+      <!-- DESAFIOS -->
+
+      <section id="panel-challenges" class="sq-panel active">
+        <div class="sq-section-header">
+          <div>
+            <h2>Desafios do evento</h2>
+            <p>Descobre o que tens de fotografar.</p>
+          </div>
+        </div>
+
+        <div id="challengesGrid" class="sq-challenge-grid">
+          <div class="sq-empty">
+            <div class="sq-empty-icon">⌛</div>
+            <h3>A carregar desafios</h3>
+            <p>Estamos a procurar os desafios deste evento.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- GALERIA -->
+
+      <section id="panel-gallery" class="sq-panel">
+        <div class="sq-section-header">
+          <div>
+            <h2>Galeria</h2>
+            <p>Fotografias partilhadas pelos participantes.</p>
+          </div>
+        </div>
+
+        <div id="galleryGrid" class="sq-gallery-grid">
+          <div class="sq-empty">
+            <div class="sq-empty-icon">▧</div>
+            <h3>A carregar galeria</h3>
+            <p>As fotografias aparecerão aqui.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- RANKING -->
+
+      <section id="panel-ranking" class="sq-panel">
+        <div class="sq-section-header">
+          <div>
+            <h2>Classificação</h2>
+            <p>Acompanha a classificação do evento.</p>
+          </div>
+        </div>
+
+        <div id="rankingList" class="sq-ranking-list">
+          <div class="sq-empty">
+            <div class="sq-empty-icon">♛</div>
+            <h3>A carregar ranking</h3>
+            <p>A classificação aparecerá aqui.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ENVIAR FOTOGRAFIA -->
+
+      <section id="panel-submit" class="sq-panel">
+        <div class="sq-section-header">
+          <div>
+            <h2>Partilhar momento</h2>
+            <p>Escolhe um desafio e envia a tua fotografia.</p>
+          </div>
+        </div>
+
+        <div class="sq-upload-card">
+          <h3>Nova participação</h3>
+
+          <p>
+            As fotografias enviadas serão associadas ao teu perfil neste evento.
+          </p>
+
+          <form id="submissionForm">
+            <div class="sq-form-group">
+              <label for="submissionChallenge"> Escolher desafio </label>
+
+              <select class="sq-input" id="submissionChallenge" required>
+                <option value="">A carregar desafios...</option>
+              </select>
+            </div>
+
+            <div class="sq-form-group">
+              <label>Fotografia</label>
+
+              <label class="sq-file-label" for="submissionFile">
+                <strong>Escolher fotografia</strong>
+                <span id="fileName">JPG, PNG ou WEBP · Máximo 10 MB</span>
+
+                <input
+                  type="file"
+                  id="submissionFile"
+                  accept="image/jpeg,image/png,image/webp"
+                  required
+                />
+              </label>
+
+              <img
+                id="imagePreview"
+                class="sq-preview sq-hidden"
+                alt="Pré-visualização da fotografia"
+              />
+            </div>
+
+            <div class="sq-form-group">
+              <label for="submissionCaption"> Descrição (opcional) </label>
+
+              <textarea
+                class="sq-input"
+                id="submissionCaption"
+                maxlength="300"
+                placeholder="Conta um pouco sobre este momento..."
+              ></textarea>
+            </div>
+
+            <button
+              class="sq-button sq-full"
+              id="submitPhotoButton"
+              type="submit"
+            >
+              Enviar fotografia
+            </button>
+
+            <div id="submissionError" class="sq-error"></div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <!-- MODAL PARA ALTERAR NOME -->
+
+    <div id="nameModal" class="sq-modal sq-hidden">
+      <div class="sq-modal-content">
+        <h2>Alterar nome</h2>
+
+        <form id="renameForm">
+          <div class="sq-form-group">
+            <label for="newParticipantName">Novo nome</label>
+
+            <input
+              class="sq-input"
+              id="newParticipantName"
+              type="text"
+              minlength="2"
+              maxlength="30"
+              required
+            />
+          </div>
+
+          <div style="display: flex; gap: 10px">
+            <button class="sq-button" type="submit">Guardar</button>
+
+            <button
+              class="sq-button sq-button-secondary"
+              id="closeNameModal"
+              type="button"
+            >
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <footer class="sq-footer">
+      SNAPQUEST · Cria momentos. Aceita desafios. Partilha histórias.
+    </footer>
+
+    <div id="snapquestToast" class="sq-toast"></div>
+
+    <!-- BIBLIOTECAS E MÓDULOS -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="js/supabase.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/events.js"></script>
+    <script src="js/participants.js"></script>
+    <script src="js/challenges.js"></script>
+    <script src="js/submissions.js"></script>
+    <script src="js/gallery.js"></script>
+    <script src="js/ranking.js"></script>
+
+    <script>
+      (() => {
+        "use strict";
+
+        const $ = (selector) => document.querySelector(selector);
+
+        const api = () => window.SnapQuestSupabase;
+
+        let currentEvent = null;
+        let currentParticipant = null;
+        let challenges = [];
+        let submissions = [];
+        let selectedFile = null;
+        let realtimeChannel = null;
+
+        // =====================================
+        // UTILITÁRIOS
+        // =====================================
+
+        function toast(message, type = "success") {
+          const element = $("#snapquestToast");
+
+          element.textContent = message;
+          element.dataset.type = type;
+          element.classList.add("show");
+
+          clearTimeout(toast.timer);
+
+          toast.timer = setTimeout(() => {
+            element.classList.remove("show");
+          }, 3500);
+        }
+
+        function showScreen(screen) {
+          $("#codeScreen").classList.toggle("sq-hidden", screen !== "code");
+
+          $("#eventScreen").classList.toggle("sq-hidden", screen !== "event");
+        }
+
+        function showError(element, message) {
+          element.textContent = message || "";
+        }
+
+        function formatDate(date) {
+          if (!date) return "Data por definir";
+
+          const parsed = new Date(`${date}T00:00:00`);
+
+          if (Number.isNaN(parsed.getTime())) {
+            return "Data por definir";
+          }
+
+          return parsed.toLocaleDateString("pt-PT", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          });
+        }
+
+        function emptyState(container, icon, title, description) {
+          container.replaceChildren();
+
+          const box = document.createElement("div");
+          box.className = "sq-empty";
+
+          const symbol = document.createElement("div");
+          symbol.className = "sq-empty-icon";
+          symbol.textContent = icon;
+
+          const heading = document.createElement("h3");
+          heading.textContent = title;
+
+          const paragraph = document.createElement("p");
+          paragraph.textContent = description;
+
+          box.append(symbol, heading, paragraph);
+          container.appendChild(box);
+        }
+
+        // =====================================
+        // EVENTO
+        // =====================================
+
+        function renderEvent(event) {
+          currentEvent = event;
+
+          $("#eventTitle").textContent = event.name || "Evento SnapQuest";
+
+          $("#eventDescription").textContent =
+            event.description || "Participa nos desafios deste evento.";
+
+          $("#eventDate").textContent = "◷ " + formatDate(event.event_date);
+
+          if (event.cover_url) {
+            $("#eventCover").src = event.cover_url;
+            $("#eventCover").classList.remove("sq-hidden");
+          } else {
+            $("#eventCover").classList.add("sq-hidden");
+          }
+
+          document.title = `${event.name} | SnapQuest`;
+
+          showScreen("event");
+        }
+
+        async function loadEvent(code) {
+          showError($("#codeError"), "");
+
+          const result =
+            await window.SnapQuestParticipants.loadEventByPublicId(code);
+
+          if (!result.success) {
+            showError($("#codeError"), result.message);
+            showScreen("code");
+            return;
+          }
+
+          renderEvent(result.event);
+
+          if (result.participant) {
+            renderParticipant(result.participant);
+          } else {
+            showJoinSection();
+          }
+
+          await loadEventContent();
+          startRealtime();
+        }
+
+        // =====================================
+        // PARTICIPANTE
+        // =====================================
+
+        function showJoinSection() {
+          $("#joinSection").classList.remove("sq-hidden");
+          $("#profileSection").classList.add("sq-hidden");
+
+          $("#submissionForm")
+            .querySelectorAll("input, select, textarea, button")
+            .forEach((element) => {
+              element.disabled = true;
+            });
+        }
+
+        function renderParticipant(participant) {
+          currentParticipant = participant;
+
+          $("#joinSection").classList.add("sq-hidden");
+          $("#profileSection").classList.remove("sq-hidden");
+
+          $("#profileName").textContent = participant.name || "Participante";
+
+          $("#submissionForm")
+            .querySelectorAll("input, select, textarea, button")
+            .forEach((element) => {
+              element.disabled = false;
+            });
+        }
+
+        $("#participantForm").addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          const button = event.currentTarget.querySelector(
+            'button[type="submit"]',
+          );
+
+          button.disabled = true;
+
+          try {
+            const participant = await window.SnapQuestParticipants.joinEvent(
+              $("#participantName").value,
+            );
+
+            renderParticipant(participant);
+            await loadEventContent();
+          } catch (error) {
+            toast(error.message, "error");
+          } finally {
+            button.disabled = false;
+          }
+        });
+
+        $("#changeNameButton").addEventListener("click", () => {
+          if (!currentParticipant) return;
+
+          $("#newParticipantName").value = currentParticipant.name || "";
+
+          $("#nameModal").classList.remove("sq-hidden");
+        });
+
+        $("#closeNameModal").addEventListener("click", () => {
+          $("#nameModal").classList.add("sq-hidden");
+        });
+
+        $("#renameForm").addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          try {
+            const updated = await window.SnapQuestParticipants.updateProfile({
+              name: $("#newParticipantName").value,
+            });
+
+            renderParticipant(updated);
+            $("#nameModal").classList.add("sq-hidden");
+
+            toast("Nome atualizado!");
+          } catch (error) {
+            toast(error.message, "error");
+          }
+        });
+
+        // =====================================
+        // ESTATÍSTICAS
+        // =====================================
+
+        async function loadStatistics() {
+          const [participantsResult, challengesResult, photosResult] =
+            await Promise.all([
+              api()
+                .client.from("event_participants")
+                .select("id", { count: "exact", head: true })
+                .eq("event_id", currentEvent.id),
+
+              api()
+                .client.from("challenges")
+                .select("id", { count: "exact", head: true })
+                .eq("event_id", currentEvent.id),
+
+              api()
+                .client.from("photo_submissions")
+                .select("id", { count: "exact", head: true })
+                .eq("event_id", currentEvent.id)
+                .eq("status", "published"),
+            ]);
+
+          if (participantsResult.error) {
+            console.error(participantsResult.error);
+          }
+
+          if (challengesResult.error) {
+            console.error(challengesResult.error);
+          }
+
+          if (photosResult.error) {
+            console.error(photosResult.error);
+          }
+
+          $("#participantCount").textContent = participantsResult.count ?? 0;
+
+          $("#challengeCount").textContent = challengesResult.count ?? 0;
+
+          $("#photoCount").textContent = photosResult.count ?? 0;
+        }
+
+        // =====================================
+        // DESAFIOS
+        // =====================================
+
+        async function loadChallenges() {
+          const result = await api().Challenges.getByEvent(currentEvent.id);
+
+          if (!result.success) {
+            throw new Error(result.message);
+          }
+
+          challenges = result.data || [];
+
+          renderChallenges();
+          populateChallengeSelect();
+        }
+
+        function renderChallenges() {
+          const grid = $("#challengesGrid");
+
+          grid.replaceChildren();
+
+          if (!challenges.length) {
+            emptyState(
+              grid,
+              "✦",
+              "Ainda não existem desafios",
+              "O organizador ainda não publicou desafios neste evento.",
+            );
+            return;
+          }
+
+          challenges.forEach((challenge) => {
+            const card = document.createElement("article");
+            card.className = "sq-challenge";
+
+            const imageContainer = document.createElement("div");
+            imageContainer.className = "sq-challenge-image";
+
+            if (challenge.image_url) {
+              const image = document.createElement("img");
+              image.src = challenge.image_url;
+              image.alt = challenge.title || "Desafio";
+              image.loading = "lazy";
+
+              imageContainer.appendChild(image);
+            } else {
+              imageContainer.textContent = "✦";
+            }
+
+            const content = document.createElement("div");
+            content.className = "sq-challenge-content";
+
+            const title = document.createElement("h3");
+            title.textContent = challenge.title || "Desafio";
+
+            const description = document.createElement("p");
+            description.textContent = challenge.description || "Sem descrição.";
+
+            const footer = document.createElement("div");
+            footer.className = "sq-challenge-footer";
+
+            const status = document.createElement("span");
+            status.className = "sq-pill";
+
+            if (challenge.status === "available") {
+              status.textContent = "Disponível";
+              status.classList.add("available");
+            } else if (challenge.status === "ended") {
+              status.textContent = "Terminado";
+              status.classList.add("ended");
+            } else {
+              status.textContent = "Bloqueado";
+            }
+
+            const action = document.createElement("button");
+            action.className = "sq-button sq-button-secondary";
+            action.type = "button";
+            action.textContent = "Participar";
+
+            action.disabled =
+              challenge.status !== "available" || !currentParticipant;
+
+            action.addEventListener("click", () => {
+              $("#submissionChallenge").value = challenge.id;
+              switchTab("submit");
+            });
+
+            footer.append(status, action);
+            content.append(title, description, footer);
+            card.append(imageContainer, content);
+
+            grid.appendChild(card);
+          });
+        }
+
+        function populateChallengeSelect() {
+          const select = $("#submissionChallenge");
+
+          select.replaceChildren();
+
+          const initial = document.createElement("option");
+          initial.value = "";
+          initial.textContent = "Seleciona um desafio";
+
+          select.appendChild(initial);
+
+          challenges
+            .filter((challenge) => challenge.status === "available")
+            .forEach((challenge) => {
+              const option = document.createElement("option");
+
+              option.value = challenge.id;
+              option.textContent = challenge.title;
+
+              select.appendChild(option);
+            });
+        }
+
+        // =====================================
+        // GALERIA
+        // =====================================
+
+        async function loadGallery() {
+          const result = await api().Submissions.getByEvent(currentEvent.id);
+
+          if (!result.success) {
+            throw new Error(result.message);
+          }
+
+          submissions = result.data || [];
+
+          await renderGallery();
+        }
+
+        async function renderGallery() {
+          const grid = $("#galleryGrid");
+
+          grid.replaceChildren();
+
+          if (!submissions.length) {
+            emptyState(
+              grid,
+              "▧",
+              "A galeria está vazia",
+              "As fotografias enviadas pelos participantes aparecerão aqui.",
+            );
+            return;
+          }
+
+          for (const submission of submissions) {
+            const url = await api().Storage.getPublicUrl(
+              "photos",
+              submission.storage_path,
+            );
+
+            const card = document.createElement("article");
+            card.className = "sq-gallery-item";
+
+            const image = document.createElement("img");
+            image.src = url;
+            image.alt = submission.caption || "Fotografia do evento";
+            image.loading = "lazy";
+
+            const caption = document.createElement("div");
+            caption.className = "sq-gallery-caption";
+
+            caption.textContent = submission.caption || "Fotografia partilhada";
+
+            card.append(image, caption);
+            grid.appendChild(card);
+          }
+        }
+
+        // =====================================
+        // RANKING
+        // =====================================
+
+        async function loadRanking() {
+          const result = await api().Ranking.getByEvent(currentEvent.id);
+
+          if (!result.success) {
+            throw new Error(result.message);
+          }
+
+          renderRanking(result.data || []);
+        }
+
+        function renderRanking(ranking) {
+          const list = $("#rankingList");
+
+          list.replaceChildren();
+
+          if (!ranking.length) {
+            emptyState(
+              list,
+              "♛",
+              "Ainda não existe classificação",
+              "A classificação aparecerá quando existirem resultados.",
+            );
+            return;
+          }
+
+          ranking.forEach((participant, index) => {
+            const item = document.createElement("div");
+            item.className = "sq-ranking-item";
+
+            const position = document.createElement("div");
+            position.className = "sq-ranking-position";
+            position.textContent = index + 1;
+
+            const name = document.createElement("div");
+            name.className = "sq-ranking-name";
+
+            name.textContent =
+              participant.name ||
+              participant.participant_name ||
+              "Participante";
+
+            const points = document.createElement("div");
+            points.className = "sq-ranking-points";
+
+            const score =
+              participant.points ??
+              participant.total_points ??
+              participant.score;
+
+            points.textContent =
+              score !== undefined && score !== null ? `${score} pts` : "—";
+
+            item.append(position, name, points);
+            list.appendChild(item);
+          });
+        }
+
+        // =====================================
+        // ENVIAR FOTOGRAFIA
+        // =====================================
+
+        $("#submissionFile").addEventListener("change", (event) => {
+          const file = event.target.files?.[0];
+
+          selectedFile = null;
+
+          $("#imagePreview").classList.add("sq-hidden");
+
+          if (!file) {
+            $("#fileName").textContent = "JPG, PNG ou WEBP · Máximo 10 MB";
+            return;
+          }
+
+          const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+
+          if (!allowedTypes.includes(file.type)) {
+            event.target.value = "";
+            toast("Formato de imagem não permitido.", "error");
+            return;
+          }
+
+          if (file.size > 10 * 1024 * 1024) {
+            event.target.value = "";
+            toast("A fotografia não pode ultrapassar 10 MB.", "error");
+            return;
+          }
+
+          selectedFile = file;
+
+          $("#fileName").textContent = file.name;
+
+          const preview = $("#imagePreview");
+
+          preview.src = URL.createObjectURL(file);
+          preview.classList.remove("sq-hidden");
+        });
+
+        $("#submissionForm").addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          if (!currentParticipant) {
+            toast("Tens de entrar no evento primeiro.", "error");
+            return;
+          }
+
+          if (!selectedFile) {
+            toast("Escolhe uma fotografia.", "error");
+            return;
+          }
+
+          const challengeId = $("#submissionChallenge").value;
+
+          if (!challengeId) {
+            toast("Escolhe um desafio.", "error");
+            return;
+          }
+
+          const challenge = challenges.find((item) => item.id === challengeId);
+
+          if (!challenge || challenge.status !== "available") {
+            toast("Este desafio não está disponível.", "error");
+            return;
+          }
+
+          const button = $("#submitPhotoButton");
+
+          button.disabled = true;
+          button.textContent = "A enviar...";
+
+          showError($("#submissionError"), "");
+
+          try {
+            const result = await api().Submissions.upload(selectedFile, {
+              event_id: currentEvent.id,
+              participant_id: currentParticipant.id,
+              challenge_id: challengeId,
+              caption: $("#submissionCaption").value.trim(),
+            });
+
+            if (!result.success) {
+              throw new Error(result.message);
+            }
+
+            toast("Fotografia enviada com sucesso!");
+
+            $("#submissionForm").reset();
+
+            selectedFile = null;
+
+            $("#fileName").textContent = "JPG, PNG ou WEBP · Máximo 10 MB";
+
+            $("#imagePreview").classList.add("sq-hidden");
+
+            await loadGallery();
+            await loadStatistics();
+
+            switchTab("gallery");
+          } catch (error) {
+            console.error(error);
+
+            showError(
+              $("#submissionError"),
+              error.message || "Não foi possível enviar a fotografia.",
+            );
+
+            toast(error.message || "Erro ao enviar fotografia.", "error");
+          } finally {
+            button.disabled = false;
+            button.textContent = "Enviar fotografia";
+          }
+        });
+
+        // =====================================
+        // SEPARADORES
+        // =====================================
+
+        function switchTab(tab) {
+          document.querySelectorAll(".sq-tab").forEach((button) => {
+            button.classList.toggle("active", button.dataset.tab === tab);
+          });
+
+          document.querySelectorAll(".sq-panel").forEach((panel) => {
+            panel.classList.toggle("active", panel.id === `panel-${tab}`);
+          });
+
+          if (tab === "gallery") {
+            loadGallery().catch((error) => {
+              console.error(error);
+              toast("Não foi possível carregar a galeria.", "error");
+            });
+          }
+
+          if (tab === "ranking") {
+            loadRanking().catch((error) => {
+              console.error(error);
+              toast("Não foi possível carregar o ranking.", "error");
+            });
+          }
+        }
+
+        document.querySelectorAll(".sq-tab").forEach((button) => {
+          button.addEventListener("click", () => {
+            switchTab(button.dataset.tab);
+          });
+        });
+
+        // =====================================
+        // ATUALIZAÇÕES EM TEMPO REAL
+        // =====================================
+
+        function startRealtime() {
+          if (realtimeChannel) {
+            api().Realtime.unsubscribe(realtimeChannel);
+          }
+
+          realtimeChannel = api().Realtime.subscribeToEvent(
+            currentEvent.id,
+            async (type) => {
+              try {
+                if (type === "photos") {
+                  await loadStatistics();
+
+                  if ($("#panel-gallery").classList.contains("active")) {
+                    await loadGallery();
+                  }
+                }
+
+                if (type === "challenges") {
+                  await loadChallenges();
+                  await loadStatistics();
+                }
+
+                if (type === "participants") {
+                  await loadStatistics();
+                }
+              } catch (error) {
+                console.error("[SnapQuest Realtime]", error);
+              }
+            },
+          );
+        }
+
+        // =====================================
+        // CARREGAR CONTEÚDO
+        // =====================================
+
+        async function loadEventContent() {
+          if (!currentEvent) return;
+
+          const results = await Promise.allSettled([
+            loadStatistics(),
+            loadChallenges(),
+            loadGallery(),
+            loadRanking(),
+          ]);
+
+          results.forEach((result) => {
+            if (result.status === "rejected") {
+              console.error(
+                "[SnapQuest] Erro ao carregar secção:",
+                result.reason,
+              );
+            }
+          });
+        }
+
+        // =====================================
+        // FORMULÁRIO DE CÓDIGO
+        // =====================================
+
+        $("#codeForm").addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          const button = event.currentTarget.querySelector(
+            'button[type="submit"]',
+          );
+
+          button.disabled = true;
+          button.textContent = "A procurar...";
+
+          try {
+            await loadEvent($("#eventCodeInput").value.trim());
+          } finally {
+            button.disabled = false;
+            button.textContent = "Encontrar evento";
+          }
+        });
+
+        // =====================================
+        // EVENTOS DO PARTICIPANT MODULE
+        // =====================================
+
+        document.addEventListener("snapquest:event-changed", (event) => {
+          if (event.detail?.event) {
+            renderEvent(event.detail.event);
+          }
+        });
+
+        document.addEventListener("snapquest:participant-ready", (event) => {
+          if (event.detail?.participant) {
+            renderParticipant(event.detail.participant);
+          }
+        });
+
+        document.addEventListener("snapquest:participant-required", () => {
+          showJoinSection();
+        });
+
+        document.addEventListener("snapquest:event-load-error", (event) => {
+          showScreen("code");
+          showError(
+            $("#codeError"),
+            event.detail?.message || "Erro ao carregar evento.",
+          );
+        });
+
+        // =====================================
+        // INICIALIZAÇÃO
+        // =====================================
+
+        document.addEventListener("DOMContentLoaded", async () => {
+          const params = new URLSearchParams(window.location.search);
+
+          const code = params.get("code") || params.get("id");
+
+          if (code) {
+            await loadEvent(code);
+          } else {
+            showScreen("code");
+          }
+        });
+
+        // A página começa com o formulário de código.
+        showScreen("code");
+      })();
+    </script>
+  </body>
+</html>

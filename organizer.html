@@ -1,0 +1,979 @@
+
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#faf9f6" />
+
+    <title>Organizador | SnapQuest</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="css/challenges.css" />
+    <link rel="stylesheet" href="css/global.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+    <link rel="stylesheet" href="css/auth.css" />
+    <link rel="stylesheet" href="css/dashboard-refresh.css" />
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+
+  <body class="dashboard-page">
+
+    <!-- AUTH SCREEN -->
+    <section class="auth-screen" id="authScreen">
+      <div class="auth-decoration"></div>
+
+      <div class="auth-container">
+        <a href="index.html" class="logo auth-logo">
+          <span class="logo-icon">S</span>
+          <span>SnapQuest<span class="logo-dot">.</span></span>
+        </a>
+
+        <div class="auth-content">
+          <span class="section-tag">A TUA EXPERIÊNCIA COMEÇA AQUI</span>
+
+          <h1 id="authTitle">
+            Bem-vindo<br />
+            <span>de volta.</span>
+          </h1>
+
+          <p id="authDescription">
+            Entra na tua conta e continua a criar experiências inesquecíveis.
+          </p>
+
+          <!-- LOGIN -->
+          <form id="loginForm" class="auth-form">
+            <label for="loginEmail">E-mail</label>
+
+            <input
+              type="email"
+              id="loginEmail"
+              placeholder="exemplo@email.com"
+              autocomplete="email"
+              required
+            />
+
+            <label for="loginPassword">Palavra-passe</label>
+
+            <input
+              type="password"
+              id="loginPassword"
+              placeholder="A tua palavra-passe"
+              autocomplete="current-password"
+              required
+            />
+
+            <button type="submit" class="btn btn-primary auth-submit">
+              Entrar na conta
+              <i data-lucide="arrow-right"></i>
+            </button>
+
+            <p class="auth-switch">
+              Ainda não tens conta?
+              <button type="button" id="showRegister">Criar conta</button>
+            </p>
+          </form>
+
+          <!-- REGISTER -->
+          <form id="registerForm" class="auth-form" hidden>
+            <label for="registerName">Nome</label>
+
+            <input
+              type="text"
+              id="registerName"
+              placeholder="O teu nome"
+              autocomplete="name"
+              maxlength="80"
+              required
+            />
+
+            <label for="registerEmail">E-mail</label>
+
+            <input
+              type="email"
+              id="registerEmail"
+              placeholder="exemplo@email.com"
+              autocomplete="email"
+              required
+            />
+
+            <label for="registerPassword">Palavra-passe</label>
+
+            <input
+              type="password"
+              id="registerPassword"
+              placeholder="Mínimo de 8 caracteres"
+              autocomplete="new-password"
+              minlength="8"
+              required
+            />
+
+            <button type="submit" class="btn btn-primary auth-submit">
+              Criar a minha conta
+              <i data-lucide="arrow-right"></i>
+            </button>
+
+            <p class="auth-switch">
+              Já tens uma conta?
+              <button type="button" id="showLogin">Entrar</button>
+            </p>
+          </form>
+
+          <p class="auth-message" id="authMessage" role="status"></p>
+        </div>
+
+        <p class="auth-footer">
+          © 2026 SnapQuest. Todos os direitos reservados.
+        </p>
+      </div>
+
+      <div class="auth-image">
+        <img
+          src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=85"
+          alt="Celebração especial"
+        />
+
+        <div class="auth-image-overlay">
+          <span>CAPTURE MOMENTS</span>
+          <h2>Create<br />memories.</h2>
+          <p>Transforma os teus eventos em experiências inesquecíveis.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- DASHBOARD -->
+    <div class="dashboard-layout" id="dashboardLayout" hidden>
+
+      <!-- SIDEBAR -->
+      <aside class="dashboard-sidebar" id="dashboardSidebar">
+
+        <a href="index.html" class="logo sidebar-logo">
+          <span class="logo-icon">S</span>
+          <span>SnapQuest<span class="logo-dot">.</span></span>
+        </a>
+
+        <div class="sidebar-section">
+          <span class="sidebar-label">MENU PRINCIPAL</span>
+
+          <button class="sidebar-link active" data-section="overview">
+            <i data-lucide="layout-dashboard"></i>
+            <span>Visão geral</span>
+          </button>
+
+          <button class="sidebar-link" data-section="events">
+            <i data-lucide="calendar-days"></i>
+            <span>Os meus eventos</span>
+          </button>
+
+          <button class="sidebar-link" data-section="participants">
+            <i data-lucide="users"></i>
+            <span>Participantes</span>
+          </button>
+
+          <button class="sidebar-link" data-section="challenges">
+            <i data-lucide="target"></i>
+            <span>Desafios</span>
+          </button>
+
+          <button class="sidebar-link" data-section="batches">
+            <i data-lucide="layers"></i>
+            <span>Batches</span>
+          </button>
+
+          <button class="sidebar-link" data-section="photos">
+            <i data-lucide="images"></i>
+            <span>Fotografias</span>
+          </button>
+
+          <button class="sidebar-link" data-section="ranking">
+            <i data-lucide="trophy"></i>
+            <span>Ranking</span>
+          </button>
+
+          <!-- NOVO: MODO PROJETOR -->
+          <button class="sidebar-link" data-section="projector">
+            <i data-lucide="monitor"></i>
+            <span>Modo Projetor</span>
+          </button>
+        </div>
+
+        <div class="sidebar-section">
+          <span class="sidebar-label">GESTÃO</span>
+
+          <button class="sidebar-link" data-section="links">
+            <i data-lucide="qr-code"></i>
+            <span>Links e QR Codes</span>
+          </button>
+
+          <button class="sidebar-link" data-section="settings">
+            <i data-lucide="settings"></i>
+            <span>Configurações</span>
+          </button>
+        </div>
+
+        <div class="sidebar-bottom">
+          <div class="sidebar-user">
+            <div class="sidebar-avatar" id="sidebarAvatar">O</div>
+
+            <div class="sidebar-user-info">
+              <strong id="sidebarUserName">Organizador</strong>
+              <span>Organizador</span>
+            </div>
+
+            <button id="logoutButton" aria-label="Terminar sessão">
+              <i data-lucide="log-out"></i>
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN DASHBOARD -->
+      <main class="dashboard-main">
+
+        <header class="dashboard-topbar">
+          <div class="topbar-left">
+            <button
+              class="icon-button sidebar-toggle"
+              id="sidebarToggle"
+              aria-label="Abrir menu"
+            >
+              <i data-lucide="menu"></i>
+            </button>
+
+            <div>
+              <span class="topbar-greeting">ÁREA DE ORGANIZAÇÃO</span>
+              <h2 id="pageTitle">Visão geral</h2>
+            </div>
+          </div>
+
+          <div class="topbar-actions">
+            <button class="icon-button" aria-label="Notificações">
+              <i data-lucide="bell"></i>
+            </button>
+
+            <button class="btn btn-primary btn-small" id="newEventButton">
+              <i data-lucide="plus"></i>
+              Criar evento
+            </button>
+          </div>
+        </header>
+
+        <!-- OVERVIEW -->
+        <section class="dashboard-section active" id="overviewSection">
+
+          <div class="dashboard-welcome">
+            <div>
+              <span class="section-tag">O TEU ESPAÇO DE CRIAÇÃO</span>
+              <h1>Vamos criar algo <span>memorável.</span></h1>
+              <p>Gere os teus eventos e acompanha tudo num só lugar.</p>
+            </div>
+
+            <button class="btn btn-primary" id="overviewCreateButton">
+              <i data-lucide="plus"></i>
+              Novo evento
+            </button>
+          </div>
+
+          <div class="dashboard-stats">
+
+            <article class="stat-card">
+              <div class="stat-card-top">
+                <span>Eventos criados</span>
+                <i data-lucide="calendar-days"></i>
+              </div>
+              <strong id="totalEvents">0</strong>
+              <small>Todos os teus eventos</small>
+            </article>
+
+            <article class="stat-card">
+              <div class="stat-card-top">
+                <span>Participantes</span>
+                <i data-lucide="users"></i>
+              </div>
+              <strong id="totalParticipants">0</strong>
+              <small>Em todos os eventos</small>
+            </article>
+
+            <article class="stat-card">
+              <div class="stat-card-top">
+                <span>Fotografias</span>
+                <i data-lucide="camera"></i>
+              </div>
+              <strong id="totalPhotos">0</strong>
+              <small>Momentos partilhados</small>
+            </article>
+
+            <article class="stat-card">
+              <div class="stat-card-top">
+                <span>Desafios concluídos</span>
+                <i data-lucide="check-circle"></i>
+              </div>
+              <strong id="totalCompleted">0</strong>
+              <small>Desafios realizados</small>
+            </article>
+
+          </div>
+
+          <div class="dashboard-content-block">
+            <div class="block-header">
+              <div>
+                <h3>Os teus eventos</h3>
+                <p>Gere e acompanha as tuas celebrações.</p>
+              </div>
+
+              <button class="text-button" data-section="events">
+                Ver todos
+                <i data-lucide="arrow-right"></i>
+              </button>
+            </div>
+
+            <div class="events-grid" id="recentEvents">
+              <div class="empty-events">
+                <div class="empty-events-icon">
+                  <i data-lucide="calendar-plus"></i>
+                </div>
+
+                <h3>Ainda não tens eventos</h3>
+
+                <p>
+                  Cria o teu primeiro evento e começa a preparar desafios
+                  fotográficos.
+                </p>
+
+                <button class="btn btn-primary" id="emptyCreateButton">
+                  Criar primeiro evento
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- EVENTS -->
+        <section class="dashboard-section" id="eventsSection">
+
+          <div class="section-page-heading">
+            <div>
+              <span class="section-tag">GESTÃO DE EVENTOS</span>
+              <h1>Os meus eventos</h1>
+              <p>Todos os teus eventos num só lugar.</p>
+            </div>
+
+            <button class="btn btn-primary" id="eventsCreateButton">
+              <i data-lucide="plus"></i>
+              Criar evento
+            </button>
+          </div>
+
+          <div id="eventControls"></div>
+
+          <div class="event-tools">
+            <div class="search-input">
+              <i data-lucide="search"></i>
+              <input
+                type="search"
+                id="eventSearch"
+                placeholder="Pesquisar eventos..."
+              />
+            </div>
+
+            <select id="eventStatusFilter">
+              <option value="all">Todos os estados</option>
+              <option value="draft">Rascunhos</option>
+              <option value="published">Publicados</option>
+              <option value="ended">Encerrados</option>
+              <option value="archived">Arquivados</option>
+            </select>
+          </div>
+
+          <div class="events-grid" id="allEvents">
+            <div class="empty-events">
+              <i data-lucide="calendar"></i>
+              <h3>Nenhum evento encontrado</h3>
+              <p>Cria um evento para começar.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- PARTICIPANTS -->
+        <section class="dashboard-section" id="participantsSection">
+          <div id="participantsList">
+            <div class="dashboard-placeholder">
+              <i data-lucide="users"></i>
+              <h3>Seleciona um evento</h3>
+              <p>Escolhe um evento para consultar os participantes.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- CHALLENGES -->
+        <section class="dashboard-section" id="challengesSection">
+
+          <div class="section-page-heading">
+            <div>
+              <span class="section-tag">CRIATIVIDADE</span>
+              <h1>Desafios</h1>
+              <p>
+                Cria, gere e acompanha os desafios fotográficos do teu evento.
+              </p>
+            </div>
+
+            <button class="btn-primary" id="createChallengeButton">
+              <i data-lucide="plus"></i>
+              Novo desafio
+            </button>
+          </div>
+
+          <div class="challenge-event-selector">
+            <label for="challengeEventSelect">Evento selecionado</label>
+            <select id="challengeEventSelect">
+              <option value="">Seleciona um evento</option>
+            </select>
+          </div>
+
+          <div class="challenge-statistics">
+            <div class="challenge-stat">
+              <span>Total de desafios</span>
+              <strong id="challengeTotal">0</strong>
+            </div>
+
+            <div class="challenge-stat">
+              <span>Ativos</span>
+              <strong id="challengeActive">0</strong>
+            </div>
+
+            <div class="challenge-stat">
+              <span>Bloqueados</span>
+              <strong id="challengeLocked">0</strong>
+            </div>
+
+            <div class="challenge-stat">
+              <span>Fotografias submetidas</span>
+              <strong id="challengeSubmissions">0</strong>
+            </div>
+          </div>
+
+          <div class="challenge-toolbar">
+            <div class="challenge-search">
+              <i data-lucide="search"></i>
+              <input
+                type="search"
+                id="challengeSearch"
+                placeholder="Pesquisar desafios..."
+              />
+            </div>
+
+            <select id="challengeStatusFilter">
+              <option value="all">Todos os estados</option>
+              <option value="locked">Bloqueados</option>
+              <option value="available">Disponíveis</option>
+              <option value="ended">Terminados</option>
+              <option value="completed">Concluídos</option>
+            </select>
+          </div>
+
+          <div id="organizerChallengesList" class="organizer-challenges-list">
+            <div class="dashboard-placeholder">
+              <i data-lucide="target"></i>
+              <h3>Seleciona um evento</h3>
+              <p>Escolhe um evento para veres e gerires os seus desafios.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- CHALLENGE MODAL -->
+        <div class="modal-overlay" id="challengeModal">
+          <div class="modal-content challenge-modal-content">
+
+            <div class="modal-header">
+              <div>
+                <span class="section-tag">GESTÃO DE DESAFIOS</span>
+                <h2 id="challengeModalTitle">Novo desafio</h2>
+              </div>
+
+              <button
+                type="button"
+                class="modal-close"
+                id="closeChallengeModal"
+              >
+                <i data-lucide="x"></i>
+              </button>
+            </div>
+
+            <form id="challengeForm">
+              <input type="hidden" id="challengeId" />
+
+              <div class="form-group">
+                <label for="challengeTitle">Nome do desafio</label>
+                <input
+                  type="text"
+                  id="challengeTitle"
+                  placeholder="Ex.: A melhor fotografia do pôr do sol"
+                  maxlength="100"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="challengeDescription">Descrição</label>
+                <textarea
+                  id="challengeDescription"
+                  placeholder="Explica aos participantes o que devem fotografar..."
+                  rows="4"
+                ></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="challengeImageUrl">URL da imagem (opcional)</label>
+                <input
+                  type="url"
+                  id="challengeImageUrl"
+                  placeholder="https://..."
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="challengeStatus">Estado inicial</label>
+                <select id="challengeStatus">
+                  <option value="locked">Bloqueado</option>
+                  <option value="active">Ativo</option>
+                </select>
+              </div>
+
+              <div class="modal-actions">
+                <button
+                  type="button"
+                  class="btn-secondary"
+                  id="cancelChallengeModal"
+                >
+                  Cancelar
+                </button>
+
+                <button
+                  type="submit"
+                  class="btn-primary"
+                  id="saveChallengeButton"
+                >
+                  Guardar desafio
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- BATCHES -->
+        <section class="dashboard-section" id="batchesSection">
+          <div class="section-page-heading">
+            <div>
+              <span class="section-tag">LIBERTAÇÃO</span>
+              <h1>Batches</h1>
+              <p>Organiza e agenda a libertação de desafios.</p>
+            </div>
+          </div>
+
+          <div class="dashboard-placeholder">
+            <i data-lucide="layers"></i>
+            <h3>Gestão de batches</h3>
+            <p>Seleciona um evento para organizar os batches.</p>
+          </div>
+        </section>
+
+        <!-- PHOTOS -->
+        <section class="dashboard-section" id="photosSection">
+          <div id="photosList">
+            <div class="dashboard-placeholder">
+              <i data-lucide="images"></i>
+              <h3>Seleciona um evento</h3>
+              <p>Escolhe um evento para gerir as fotografias.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- RANKING -->
+        <section class="dashboard-section" id="rankingSection">
+          <div id="rankingList">
+            <div class="dashboard-placeholder">
+              <i data-lucide="trophy"></i>
+              <h3>Seleciona um evento</h3>
+              <p>Escolhe um evento para consultar a classificação.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- NOVO: MODO PROJETOR -->
+        <section class="dashboard-section" id="projectorSection">
+
+          <div class="section-page-heading">
+            <div>
+              <span class="section-tag">EXPERIÊNCIA AO VIVO</span>
+              <h1>Modo Projetor</h1>
+              <p>
+                Mostra as fotografias dos participantes numa televisão
+                ou projetor.
+              </p>
+            </div>
+          </div>
+
+          <div class="projector-settings">
+            <label for="projectorEventSelect">
+              Seleciona o evento
+            </label>
+
+            <select id="projectorEventSelect">
+              <option value="">A carregar eventos...</option>
+            </select>
+
+            <button class="btn btn-primary" id="startProjectorButton">
+              <i data-lucide="monitor-play"></i>
+              Iniciar projeção
+            </button>
+          </div>
+        </section>
+
+        <!-- LINKS -->
+        <section class="dashboard-section" id="linksSection">
+          <div class="section-page-heading">
+            <div>
+              <span class="section-tag">PARTILHA</span>
+              <h1>Links e QR Codes</h1>
+              <p>Partilha os teus eventos com os convidados.</p>
+            </div>
+          </div>
+
+          <div class="dashboard-placeholder">
+            <i data-lucide="qr-code"></i>
+            <h3>Links dos eventos</h3>
+            <p>Seleciona um evento para consultar o seu link e QR Code.</p>
+          </div>
+        </section>
+
+        <!-- SETTINGS -->
+        <section class="dashboard-section" id="settingsSection">
+          <div class="section-page-heading">
+            <div>
+              <span class="section-tag">PREFERÊNCIAS</span>
+              <h1>Configurações</h1>
+              <p>Gere as tuas preferências e a tua conta.</p>
+            </div>
+          </div>
+
+          <div class="dashboard-placeholder">
+            <i data-lucide="settings"></i>
+            <h3>Configurações da conta</h3>
+            <p>As opções de conta serão integradas posteriormente.</p>
+          </div>
+        </section>
+
+      </main>
+    </div>
+
+    <!-- JANELA DE PROJEÇÃO EM ECRÃ INTEIRO -->
+    <div id="projectorOverlay" class="projector-overlay" hidden>
+
+      <button id="closeProjectorButton" class="projector-close">
+        <i data-lucide="x"></i>
+        Sair da projeção
+      </button>
+
+      <div class="projector-photo-container">
+        <img id="projectorImage" alt="Fotografia do evento" />
+
+        <div id="projectorMessage" class="projector-message" hidden>
+          A carregar fotografias...
+        </div>
+      </div>
+
+      <div class="projector-information">
+        <div>
+          <span>FOTOGRAFIA DE</span>
+          <h2 id="projectorParticipant"></h2>
+          <p id="projectorCaption"></p>
+        </div>
+
+        <span id="projectorCounter">0 / 0</span>
+      </div>
+
+    </div>
+
+    <!-- CREATE EVENT MODAL -->
+    <div class="dashboard-modal" id="createEventModal" aria-hidden="true">
+
+      <div class="modal-backdrop" data-close-modal></div>
+
+      <div class="dashboard-modal-content">
+
+        <div class="modal-header">
+          <div>
+            <span class="section-tag">NOVO PROJETO</span>
+            <h2>Criar evento</h2>
+            <p>Começa a preparar uma experiência inesquecível.</p>
+          </div>
+
+          <button class="icon-button" data-close-modal aria-label="Fechar">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+
+        <form id="createEventForm">
+
+          <label for="eventTitle">Nome do evento</label>
+          <input
+            type="text"
+            id="eventTitle"
+            maxlength="100"
+            placeholder="Ex.: Casamento da Ana e do João"
+            required
+          />
+
+          <label for="eventDateInput">Data do evento</label>
+          <input type="date" id="eventDateInput" required />
+
+          <label for="eventDescriptionInput">
+            Descrição <span>(opcional)</span>
+          </label>
+
+          <textarea
+            id="eventDescriptionInput"
+            maxlength="1000"
+            rows="3"
+            placeholder="Conta um pouco sobre o teu evento..."
+          ></textarea>
+
+          <label for="eventCoverInput">
+            Imagem de capa <span>(opcional)</span>
+          </label>
+
+          <input
+            type="file"
+            id="eventCoverInput"
+            accept="image/jpeg,image/png,image/webp"
+          />
+
+          <div class="form-row">
+            <div>
+              <label for="eventStartInput">
+                Início <span>(opcional)</span>
+              </label>
+              <input type="datetime-local" id="eventStartInput" />
+            </div>
+
+            <div>
+              <label for="eventEndInput">
+                Encerramento <span>(opcional)</span>
+              </label>
+              <input type="datetime-local" id="eventEndInput" />
+            </div>
+          </div>
+
+          <div class="modal-note">
+            <i data-lucide="info"></i>
+            <p>
+              O evento será criado como rascunho. Só ficará acessível aos
+              participantes depois de publicado.
+            </p>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" data-close-modal>
+              Cancelar
+            </button>
+
+            <button type="submit" class="btn btn-primary">
+              Criar evento
+              <i data-lucide="arrow-right"></i>
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="js/supabase.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/events.js"></script>
+    <script src="js/participants.js"></script>
+    <script src="js/challenges.js"></script>
+    <script src="js/submissions.js"></script>
+    <script src="js/gallery.js"></script>
+    <script src="js/ranking.js"></script>
+    <script src="js/organizer.js"></script>
+
+    <!-- NOVO: MODO PROJETOR -->
+    <script src="js/projector.js"></script>
+
+    <script>
+      lucide.createIcons();
+
+      // Alternar login e registo
+      const loginForm = document.getElementById("loginForm");
+      const registerForm = document.getElementById("registerForm");
+
+      const authTitle = document.getElementById("authTitle");
+      const authDescription = document.getElementById("authDescription");
+      const authMessage = document.getElementById("authMessage");
+
+      function showAuthMode(mode) {
+        const register = mode === "register";
+
+        loginForm.hidden = register;
+        registerForm.hidden = !register;
+
+        authTitle.innerHTML = register
+          ? "Cria a tua<br><span>conta.</span>"
+          : "Bem-vindo<br><span>de volta.</span>";
+
+        authDescription.textContent = register
+          ? "Cria uma conta para começares a organizar eventos."
+          : "Entra na tua conta e continua a criar experiências inesquecíveis.";
+
+        authMessage.textContent = "";
+      }
+
+      document.getElementById("showRegister").addEventListener("click", () => {
+        showAuthMode("register");
+      });
+
+      document.getElementById("showLogin").addEventListener("click", () => {
+        showAuthMode("login");
+      });
+
+      // Navegação da sidebar
+      const sidebarLinks = document.querySelectorAll(".sidebar-link");
+      const dashboardSections = document.querySelectorAll(".dashboard-section");
+
+      const sectionTitles = {
+        overview: "Visão geral",
+        events: "Os meus eventos",
+        participants: "Participantes",
+        challenges: "Desafios",
+        batches: "Batches",
+        photos: "Fotografias",
+        ranking: "Ranking",
+        projector: "Modo Projetor",
+        links: "Links e QR Codes",
+        settings: "Configurações",
+      };
+
+      function navigateDashboard(sectionName) {
+        dashboardSections.forEach((section) => {
+          section.classList.remove("active");
+        });
+
+        sidebarLinks.forEach((link) => {
+          link.classList.remove("active");
+        });
+
+        const section = document.getElementById(sectionName + "Section");
+        const link = document.querySelector(
+          `[data-section="${sectionName}"]`
+        );
+
+        if (section) section.classList.add("active");
+        if (link) link.classList.add("active");
+
+        document.getElementById("pageTitle").textContent =
+          sectionTitles[sectionName] || "Dashboard";
+
+        document
+          .getElementById("dashboardSidebar")
+          .classList.remove("mobile-open");
+      }
+
+      sidebarLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          navigateDashboard(link.dataset.section);
+        });
+      });
+
+      document.querySelectorAll(".text-button").forEach((button) => {
+        button.addEventListener("click", () => {
+          navigateDashboard(button.dataset.section);
+        });
+      });
+
+      // Sidebar mobile
+      document.getElementById("sidebarToggle").addEventListener("click", () => {
+        document
+          .getElementById("dashboardSidebar")
+          .classList.toggle("mobile-open");
+      });
+
+      // Modal de criação de eventos
+      const createEventModal = document.getElementById("createEventModal");
+
+      function openCreateEventModal() {
+        createEventModal.classList.add("active");
+        createEventModal.setAttribute("aria-hidden", "false");
+      }
+
+      function closeCreateEventModal() {
+        createEventModal.classList.remove("active");
+        createEventModal.setAttribute("aria-hidden", "true");
+      }
+
+      [
+        "newEventButton",
+        "overviewCreateButton",
+        "eventsCreateButton",
+        "emptyCreateButton",
+      ].forEach((id) => {
+        document
+          .getElementById(id)
+          ?.addEventListener("click", openCreateEventModal);
+      });
+
+      document.querySelectorAll("[data-close-modal]").forEach((button) => {
+        button.addEventListener("click", closeCreateEventModal);
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeCreateEventModal();
+      });
+
+      // Pesquisa e filtros
+      const eventSearch = document.getElementById("eventSearch");
+      const eventStatusFilter = document.getElementById("eventStatusFilter");
+
+      function filterEvents() {
+        if (typeof window.filterOrganizerEvents === "function") {
+          window.filterOrganizerEvents(
+            eventSearch.value,
+            eventStatusFilter.value
+          );
+        }
+      }
+
+      eventSearch.addEventListener("input", filterEvents);
+      eventStatusFilter.addEventListener("change", filterEvents);
+
+      // Criar evento
+      document
+        .getElementById("createEventForm")
+        .addEventListener("submit", (event) => {
+          event.preventDefault();
+
+          if (typeof window.createOrganizerEvent !== "function") {
+            alert(
+              "A criação de eventos será ativada após a integração com o backend."
+            );
+            return;
+          }
+
+          window.createOrganizerEvent().catch((error) => {
+            console.error("[SnapQuest] Falha ao criar evento:", error);
+          });
+        });
+    </script>
+
+  </body>
+</html>
