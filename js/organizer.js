@@ -1,4 +1,3 @@
-
 /* =========================================================
    SNAPQUEST — ORGANIZER
    Painel completo de controlo dos organizadores
@@ -35,13 +34,17 @@
   // -----------------------------------------------------
 
   function escapeHTML(value) {
-    return String(value ?? "").replace(/[&<>"']/g, (char) => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#039;",
-    })[char]);
+    return String(value ?? "").replace(
+      /[&<>"']/g,
+      (char) =>
+        ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#039;",
+        })[char],
+    );
   }
 
   function showNotification(message, type = "success") {
@@ -101,10 +104,10 @@
   function getRankingPoints(item) {
     return Number(
       item?.points ??
-      item?.total_points ??
-      item?.score ??
-      item?.total_score ??
-      0
+        item?.total_points ??
+        item?.score ??
+        item?.total_score ??
+        0,
     );
   }
 
@@ -128,7 +131,7 @@
       id: $("challengeId"),
       title: $("challengeTitle"),
       description: $("challengeDescription"),
-      image: $("challengeImageUrl"),
+      image: $("challengeImageFile"),
       status: $("challengeStatus"),
       saveButton: $("saveChallengeButton"),
     };
@@ -146,10 +149,7 @@
       window.SnapQuestChallenges?.setCurrentEvent?.(currentEvent.id);
       window.SnapQuestGallery?.setCurrentEvent?.(currentEvent.id);
       window.SnapQuestRanking?.setCurrentEvent?.(currentEvent.id);
-      window.SnapQuestSubmissions?.setContext?.(
-        currentEvent.id,
-        null
-      );
+      window.SnapQuestSubmissions?.setContext?.(currentEvent.id, null);
     }
 
     syncEventSelectors();
@@ -404,9 +404,7 @@
 
     const events = window.SnapQuestEvents?.getEvents?.() || [];
 
-    const event = events.find(
-      (item) => String(item.id) === String(eventId)
-    );
+    const event = events.find((item) => String(item.id) === String(eventId));
 
     if (!event) {
       showNotification("Não foi possível encontrar esse evento.", "error");
@@ -420,10 +418,7 @@
     if (!authorized) {
       setCurrentEvent(null);
 
-      showNotification(
-        "Não tens permissões para gerir este evento.",
-        "error"
-      );
+      showNotification("Não tens permissões para gerir este evento.", "error");
 
       renderAllManagementSections();
       return;
@@ -439,6 +434,7 @@
       showNotification(error.message || "Erro ao carregar o evento.", "error");
     }
   }
+  window.selectEvent = selectEvent;
 
   // -----------------------------------------------------
   // CARREGAR DASHBOARD
@@ -453,13 +449,12 @@
       throw new Error("Não tens permissões para gerir este evento.");
     }
 
-    const [participants, challenges, submissions, ranking] =
-      await Promise.all([
-        window.SnapQuestParticipants.loadParticipants(eventId),
-        window.SnapQuestChallenges.loadChallenges(eventId),
-        window.SnapQuestSubmissions.loadSubmissions(eventId),
-        window.SnapQuestRanking.loadRanking(eventId),
-      ]);
+    const [participants, challenges, submissions, ranking] = await Promise.all([
+      window.SnapQuestParticipants.loadParticipants(eventId),
+      window.SnapQuestChallenges.loadChallenges(eventId),
+      window.SnapQuestSubmissions.loadSubmissions(eventId),
+      window.SnapQuestRanking.loadRanking(eventId),
+    ]);
 
     dashboardData = {
       participants: participants || [],
@@ -481,9 +476,8 @@
       challenges: dashboardData.challenges.length,
       submissions: dashboardData.submissions.length,
       likes: dashboardData.submissions.reduce(
-        (total, photo) =>
-          total + (photo.photo_likes?.length || 0),
-        0
+        (total, photo) => total + (photo.photo_likes?.length || 0),
+        0,
       ),
     };
   }
@@ -507,7 +501,7 @@
       container.innerHTML = emptyState(
         "users",
         "Seleciona um evento",
-        "Escolhe um evento para consultar os participantes."
+        "Escolhe um evento para consultar os participantes.",
       );
       return;
     }
@@ -518,7 +512,7 @@
       container.innerHTML = emptyState(
         "user-round",
         "Ainda não existem participantes",
-        "Quando alguém entrar no evento, aparecerá aqui."
+        "Quando alguém entrar no evento, aparecerá aqui.",
       );
       return;
     }
@@ -534,11 +528,12 @@
             </tr>
           </thead>
           <tbody>
-            ${participants.map((participant) => {
-              const name = getParticipantName(participant);
-              const avatar = participant.avatar_url;
+            ${participants
+              .map((participant) => {
+                const name = getParticipantName(participant);
+                const avatar = participant.avatar_url;
 
-              return `
+                return `
                 <tr>
                   <td>
                     <div class="organizer-person">
@@ -562,7 +557,8 @@
                   </td>
                 </tr>
               `;
-            }).join("")}
+              })
+              .join("")}
           </tbody>
         </table>
       </div>
@@ -574,7 +570,9 @@
   async function removeParticipant(participantId) {
     await requireOrganizer();
 
-    if (!window.confirm("Tens a certeza de que queres remover este participante?")) {
+    if (
+      !window.confirm("Tens a certeza de que queres remover este participante?")
+    ) {
       return false;
     }
 
@@ -600,7 +598,7 @@
       container.innerHTML = emptyState(
         "images",
         "Seleciona um evento",
-        "Escolhe um evento para consultar as fotografias."
+        "Escolhe um evento para consultar as fotografias.",
       );
       return;
     }
@@ -611,22 +609,23 @@
       container.innerHTML = emptyState(
         "camera",
         "Ainda não existem fotografias",
-        "As fotografias enviadas pelos participantes aparecerão aqui."
+        "As fotografias enviadas pelos participantes aparecerão aqui.",
       );
       return;
     }
 
     container.innerHTML = `
       <div class="organizer-photo-grid">
-        ${photos.map((photo) => {
-          const participant = getPhotoParticipant(photo);
-          const challenge = getPhotoChallenge(photo);
+        ${photos
+          .map((photo) => {
+            const participant = getPhotoParticipant(photo);
+            const challenge = getPhotoChallenge(photo);
 
-          const name = getParticipantName(participant);
-          const imageUrl = photo.image_url || "";
-          const challengeName = challenge.title || "Desafio";
+            const name = getParticipantName(participant);
+            const imageUrl = photo.image_url || "";
+            const challengeName = challenge.title || "Desafio";
 
-          return `
+            return `
             <article class="organizer-photo-card">
               <a
                 href="${escapeHTML(imageUrl)}"
@@ -645,11 +644,7 @@
                 <strong>${escapeHTML(name)}</strong>
                 <span>${escapeHTML(challengeName)}</span>
 
-                ${
-                  photo.caption
-                    ? `<p>${escapeHTML(photo.caption)}</p>`
-                    : ""
-                }
+                ${photo.caption ? `<p>${escapeHTML(photo.caption)}</p>` : ""}
 
                 <small>${escapeHTML(formatDate(photo.created_at))}</small>
 
@@ -663,7 +658,8 @@
               </div>
             </article>
           `;
-        }).join("")}
+          })
+          .join("")}
       </div>
     `;
 
@@ -677,8 +673,7 @@
       return false;
     }
 
-    const result =
-      await window.SnapQuestSubmissions.deleteSubmission(photoId);
+    const result = await window.SnapQuestSubmissions.deleteSubmission(photoId);
 
     await refreshDashboard();
 
@@ -699,7 +694,7 @@
       container.innerHTML = emptyState(
         "trophy",
         "Seleciona um evento",
-        "Escolhe um evento para consultar o ranking."
+        "Escolhe um evento para consultar o ranking.",
       );
       return;
     }
@@ -710,27 +705,29 @@
       container.innerHTML = emptyState(
         "medal",
         "Ranking ainda vazio",
-        "A classificação aparecerá quando existirem resultados."
+        "A classificação aparecerá quando existirem resultados.",
       );
       return;
     }
 
     container.innerHTML = `
       <div class="organizer-ranking-list">
-        ${ranking.map((item, index) => {
-          const position = Number(item.rank || index + 1);
-          const name = getRankingName(item);
-          const points = getRankingPoints(item);
+        ${ranking
+          .map((item, index) => {
+            const position = Number(item.rank || index + 1);
+            const name = getRankingName(item);
+            const points = getRankingPoints(item);
 
-          const medal = position === 1
-            ? "🥇"
-            : position === 2
-              ? "🥈"
-              : position === 3
-                ? "🥉"
-                : `#${position}`;
+            const medal =
+              position === 1
+                ? "🥇"
+                : position === 2
+                  ? "🥈"
+                  : position === 3
+                    ? "🥉"
+                    : `#${position}`;
 
-          return `
+            return `
             <article class="organizer-ranking-item ${position <= 3 ? "top-three" : ""}">
               <div class="organizer-ranking-position">${medal}</div>
 
@@ -745,7 +742,8 @@
               </div>
             </article>
           `;
-        }).join("")}
+          })
+          .join("")}
       </div>
     `;
   }
@@ -763,7 +761,7 @@
       container.innerHTML = emptyState(
         "calendar",
         "Nenhum evento selecionado",
-        "Seleciona um evento para aceder aos controlos."
+        "Seleciona um evento para aceder aos controlos.",
       );
       return;
     }
@@ -854,13 +852,15 @@
 
     try {
       const result = await window.SnapQuestEvents.pauseSubmissions(
-        currentEvent.id
+        currentEvent.id,
       );
 
-      setCurrentEvent(result || {
-        ...currentEvent,
-        submissions_paused: true,
-      });
+      setCurrentEvent(
+        result || {
+          ...currentEvent,
+          submissions_paused: true,
+        },
+      );
 
       showNotification("Submissões pausadas.");
       return result;
@@ -879,13 +879,15 @@
 
     try {
       const result = await window.SnapQuestEvents.resumeSubmissions(
-        currentEvent.id
+        currentEvent.id,
       );
 
-      setCurrentEvent(result || {
-        ...currentEvent,
-        submissions_paused: false,
-      });
+      setCurrentEvent(
+        result || {
+          ...currentEvent,
+          submissions_paused: false,
+        },
+      );
 
       showNotification("Submissões retomadas.");
       return result;
@@ -899,14 +901,14 @@
     await requireOrganizer();
 
     try {
-      const result = await window.SnapQuestEvents.publishEvent(
-        currentEvent.id
-      );
+      const result = await window.SnapQuestEvents.publishEvent(currentEvent.id);
 
-      setCurrentEvent(result || {
-        ...currentEvent,
-        status: "published",
-      });
+      setCurrentEvent(
+        result || {
+          ...currentEvent,
+          status: "published",
+        },
+      );
 
       showNotification("Evento publicado!");
       return result;
@@ -923,20 +925,24 @@
       throw new Error("Este evento não pode ser encerrado neste estado.");
     }
 
-    if (!window.confirm(
-      "Queres terminar este evento? As submissões serão encerradas."
-    )) {
+    if (
+      !window.confirm(
+        "Queres terminar este evento? As submissões serão encerradas.",
+      )
+    ) {
       return false;
     }
 
     try {
       const result = await window.SnapQuestEvents.endEvent(currentEvent.id);
 
-      setCurrentEvent(result || {
-        ...currentEvent,
-        status: "ended",
-        submissions_paused: true,
-      });
+      setCurrentEvent(
+        result || {
+          ...currentEvent,
+          status: "ended",
+          submissions_paused: true,
+        },
+      );
 
       showNotification("Evento encerrado.");
       return result;
@@ -988,7 +994,10 @@
       try {
         await removeParticipant(button.dataset.removeParticipant);
       } catch (error) {
-        showNotification(error.message || "Erro ao remover participante.", "error");
+        showNotification(
+          error.message || "Erro ao remover participante.",
+          "error",
+        );
       } finally {
         button.disabled = false;
       }
@@ -1003,7 +1012,10 @@
       try {
         await deletePhoto(button.dataset.deletePhoto);
       } catch (error) {
-        showNotification(error.message || "Erro ao eliminar fotografia.", "error");
+        showNotification(
+          error.message || "Erro ao eliminar fotografia.",
+          "error",
+        );
       } finally {
         button.disabled = false;
       }
@@ -1031,7 +1043,7 @@
 
     const result = await window.SnapQuestChallenges.updateChallenge(
       challengeId,
-      updates
+      updates,
     );
 
     await loadChallengeInterface();
@@ -1051,8 +1063,7 @@
   async function endChallenge(challengeId) {
     await requireOrganizer();
 
-    const result =
-      await window.SnapQuestChallenges.endChallenge(challengeId);
+    const result = await window.SnapQuestChallenges.endChallenge(challengeId);
 
     await loadChallengeInterface();
     return result;
@@ -1092,7 +1103,7 @@
 
     try {
       const challenges = await window.SnapQuestChallenges.loadChallenges(
-        currentEvent.id
+        currentEvent.id,
       );
 
       dashboardData.challenges = challenges || [];
@@ -1124,17 +1135,16 @@
     const total = challenges.length;
 
     const active = challenges.filter(
-      (challenge) => challenge.status === "available"
+      (challenge) => challenge.status === "available",
     ).length;
 
     const locked = challenges.filter(
-      (challenge) => challenge.status === "locked"
+      (challenge) => challenge.status === "locked",
     ).length;
 
     const submissions = challenges.reduce(
-      (sum, challenge) =>
-        sum + Number(challenge.submission_count || 0),
-      0
+      (sum, challenge) => sum + Number(challenge.submission_count || 0),
+      0,
     );
 
     if (elements.total) elements.total.textContent = total;
@@ -1155,7 +1165,7 @@
       elements.list.innerHTML = emptyState(
         "target",
         "Seleciona um evento",
-        "Escolhe um evento para veres e gerires os seus desafios."
+        "Escolhe um evento para veres e gerires os seus desafios.",
       );
       return;
     }
@@ -1166,27 +1176,28 @@
     let challenges = [...dashboardData.challenges];
 
     if (search) {
-      challenges = challenges.filter((challenge) =>
-        (challenge.title || "").toLowerCase().includes(search) ||
-        (challenge.description || "").toLowerCase().includes(search)
+      challenges = challenges.filter(
+        (challenge) =>
+          (challenge.title || "").toLowerCase().includes(search) ||
+          (challenge.description || "").toLowerCase().includes(search),
       );
     }
 
     if (statusFilter !== "all") {
       challenges = challenges.filter(
-        (challenge) => challenge.status === statusFilter
+        (challenge) => challenge.status === statusFilter,
       );
     }
 
     challenges.sort(
-      (a, b) => Number(a.position || 0) - Number(b.position || 0)
+      (a, b) => Number(a.position || 0) - Number(b.position || 0),
     );
 
     if (!challenges.length) {
       elements.list.innerHTML = emptyState(
         "target",
         "Nenhum desafio encontrado",
-        "Ainda não existem desafios ou não há resultados para os filtros."
+        "Ainda não existem desafios ou não há resultados para os filtros.",
       );
       return;
     }
@@ -1198,42 +1209,43 @@
       completed: "Concluído",
     };
 
-    elements.list.innerHTML = challenges.map((challenge) => {
-      const status = challenge.status || "locked";
+    elements.list.innerHTML = challenges
+      .map((challenge) => {
+        const status = challenge.status || "locked";
 
-      const image = challenge.image_url
-        ? `<img class="challenge-card-image" src="${escapeHTML(challenge.image_url)}" alt="" loading="lazy">`
-        : `<div class="challenge-card-image"></div>`;
+        const image = challenge.image_url
+          ? `<img class="challenge-card-image" src="${escapeHTML(challenge.image_url)}" alt="" loading="lazy">`
+          : `<div class="challenge-card-image"></div>`;
 
-      let actions = `
+        let actions = `
         <button class="challenge-action-button" data-action="edit" data-id="${escapeHTML(challenge.id)}">
           <i data-lucide="pencil"></i> Editar
         </button>
       `;
 
-      if (status === "locked") {
-        actions += `
+        if (status === "locked") {
+          actions += `
           <button class="challenge-action-button" data-action="unlock" data-id="${escapeHTML(challenge.id)}">
             <i data-lucide="unlock"></i> Desbloquear
           </button>
         `;
-      }
+        }
 
-      if (status === "available") {
-        actions += `
+        if (status === "available") {
+          actions += `
           <button class="challenge-action-button" data-action="end" data-id="${escapeHTML(challenge.id)}">
             <i data-lucide="check-circle"></i> Terminar
           </button>
         `;
-      }
+        }
 
-      actions += `
+        actions += `
         <button class="challenge-action-button delete" data-action="delete" data-id="${escapeHTML(challenge.id)}">
           <i data-lucide="trash-2"></i> Eliminar
         </button>
       `;
 
-      return `
+        return `
         <article class="challenge-card">
           ${image}
 
@@ -1256,7 +1268,8 @@
           </div>
         </article>
       `;
-    }).join("");
+      })
+      .join("");
 
     renderIcons();
   }
@@ -1274,8 +1287,27 @@
 
     if (elements.id) elements.id.value = challenge?.id || "";
     if (elements.title) elements.title.value = challenge?.title || "";
-    if (elements.description) elements.description.value = challenge?.description || "";
-    if (elements.image) elements.image.value = challenge?.image_url || "";
+    if (elements.description)
+      elements.description.value = challenge?.description || "";
+    if (elements.image) elements.image.value = "";
+
+    const preview = $("challengeImagePreview");
+
+    if (preview) {
+      preview.replaceChildren();
+
+      if (challenge?.image_url) {
+        const image = document.createElement("img");
+        image.src = challenge.image_url;
+        image.alt = "Ilustração atual do desafio";
+        image.style.maxWidth = "220px";
+        image.style.maxHeight = "140px";
+        image.style.objectFit = "cover";
+        image.style.borderRadius = "12px";
+
+        preview.appendChild(image);
+      }
+    }
 
     if (elements.status) {
       elements.status.value =
@@ -1320,7 +1352,7 @@
 
     const title = elements.title.value.trim();
     const description = elements.description.value.trim();
-    const imageUrl = elements.image.value.trim();
+    const imageFile = elements.image?.files?.[0] || null;
     const status = elements.status.value;
     const challengeId = elements.id.value;
 
@@ -1329,29 +1361,50 @@
       return;
     }
 
-    if (imageUrl) {
-      try {
-        const parsedUrl = new URL(imageUrl);
+    const maxSize = 8 * 1024 * 1024;
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
 
-        if (!["http:", "https:"].includes(parsedUrl.protocol)) {
-          throw new Error("URL inválido");
-        }
-      } catch {
-        showNotification("Introduz um URL de imagem válido.", "error");
+    if (imageFile) {
+      if (!allowedTypes.includes(imageFile.type)) {
+        showNotification("Usa uma imagem JPG, PNG ou WEBP.", "error");
+        return;
+      }
+
+      if (imageFile.size > maxSize) {
+        showNotification("A imagem não pode ultrapassar 8 MB.", "error");
         return;
       }
     }
 
-    const data = {
-      title,
-      description,
-      image_url: imageUrl || null,
-      status,
-    };
+    const existingChallenge = challengeId
+      ? dashboardData.challenges.find(
+          (item) => String(item.id) === String(challengeId),
+        )
+      : null;
+
+    let imageUrl = existingChallenge?.image_url || null;
 
     try {
       elements.saveButton.disabled = true;
       elements.saveButton.textContent = "A guardar...";
+
+      if (imageFile) {
+        elements.saveButton.textContent = "A carregar imagem...";
+
+        imageUrl = await window.SnapQuestEvents.uploadImage(
+          imageFile,
+          `challenges/illustrations/${currentEvent.id}`,
+        );
+      }
+
+      const data = {
+        title,
+        description,
+        image_url: imageUrl,
+        status,
+      };
+
+      elements.saveButton.textContent = "A guardar desafio...";
 
       if (challengeId) {
         await updateChallenge(challengeId, data);
@@ -1363,6 +1416,8 @@
 
       closeChallengeModal();
     } catch (error) {
+      console.error("Erro ao guardar desafio:", error);
+
       showNotification(error.message || "Não foi possível guardar.", "error");
     } finally {
       elements.saveButton.disabled = false;
@@ -1383,7 +1438,7 @@
     if (!challengeId) return;
 
     const challenge = dashboardData.challenges.find(
-      (item) => String(item.id) === String(challengeId)
+      (item) => String(item.id) === String(challengeId),
     );
 
     if (!challenge) return;
@@ -1458,6 +1513,39 @@
     });
 
     elements.form?.addEventListener("submit", handleChallengeSubmit);
+    elements.image?.addEventListener("change", () => {
+      const preview = $("challengeImagePreview");
+
+      if (!preview) return;
+
+      preview.replaceChildren();
+
+      const file = elements.image.files?.[0];
+
+      if (!file) return;
+
+      if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+        showNotification("Formato inválido. Usa JPG, PNG ou WEBP.", "error");
+        elements.image.value = "";
+        return;
+      }
+
+      if (file.size > 8 * 1024 * 1024) {
+        showNotification("A imagem não pode ultrapassar 8 MB.", "error");
+        elements.image.value = "";
+        return;
+      }
+
+      const image = document.createElement("img");
+      image.src = URL.createObjectURL(file);
+      image.alt = "Pré-visualização da ilustração";
+      image.style.maxWidth = "220px";
+      image.style.maxHeight = "140px";
+      image.style.objectFit = "cover";
+      image.style.borderRadius = "12px";
+
+      preview.appendChild(image);
+    });
 
     elements.eventSelect.addEventListener("change", (event) => {
       selectEvent(event.target.value);

@@ -1,3 +1,4 @@
+
 /* =========================================
    SNAPQUEST — EVENTS.JS
    Gestão completa de eventos com Supabase
@@ -17,6 +18,75 @@
 
   let events = [];
   let currentEvent = null;
+
+  // =========================================
+  // UPLOAD DE IMAGENS
+  // =========================================
+
+  async function uploadImage(file, folder = "events/covers") {
+    const client = requireClient();
+
+    if (!file) {
+      throw new Error("Não foi selecionada nenhuma imagem.");
+    }
+
+    const allowedTypes = {
+      "image/jpeg": "jpg",
+      "image/png": "png",
+      "image/webp": "webp",
+    };
+
+    if (!allowedTypes[file.type]) {
+      throw new Error("Formato inválido. Usa JPG, PNG ou WEBP.");
+    }
+
+    if (file.size > 8 * 1024 * 1024) {
+      throw new Error("A imagem não pode ultrapassar 8 MB.");
+    }
+
+    const extension = allowedTypes[file.type];
+    const filename = `${crypto.randomUUID()}.${extension}`;
+
+    let path;
+
+    if (folder === "events/covers") {
+      const {
+        data: { user },
+        error: userError,
+      } = await client.auth.getUser();
+
+      if (userError || !user) {
+        throw new Error("Tens de iniciar sessão para carregar a capa.");
+      }
+
+      path = `events/covers/${user.id}/${filename}`;
+    } else {
+      path = `${folder}/${filename}`;
+    }
+
+    const { error } = await client.storage
+      .from("photos")
+      .upload(path, file, {
+        cacheControl: "3600",
+        contentType: file.type,
+        upsert: false,
+      });
+
+    if (error) {
+      handleError(error, "Erro ao carregar imagem");
+      throw new Error(`Não foi possível carregar a imagem: ${error.message}`);
+    }
+
+    const { data } = client.storage
+      .from("photos")
+      .getPublicUrl(path);
+
+    if (!data?.publicUrl) {
+      throw new Error("Não foi possível obter o endereço da imagem.");
+    }
+
+    return data.publicUrl;
+  }
 
   // =========================================
   // UTILITÁRIOS
@@ -266,7 +336,6 @@
 
     console.log("[SnapQuest] A criar evento:", data);
 
-    // 1. Inserir o evento sem pedir imediatamente os dados de volta.
     const { error: insertError } = await client.from("events").insert(data);
 
     if (insertError) {
@@ -274,10 +343,8 @@
       throw insertError;
     }
 
-    // 2. Atualizar a lista de eventos.
     await loadEvents();
 
-    // 3. Procurar o evento acabado de criar.
     const createdEvent = events.find(
       (event) =>
         event.created_by === user.id &&
@@ -588,12 +655,8 @@
 
     return events.filter(
       (event) =>
-        String(event.name || "")
-          .toLowerCase()
-          .includes(term) ||
-        String(event.description || "")
-          .toLowerCase()
-          .includes(term),
+        String(event.name || "").toLowerCase().includes(term) ||
+        String(event.description || "").toLowerCase().includes(term),
     );
   }
 
@@ -696,6 +759,35 @@
       const actions = document.createElement("div");
       actions.className = "event-card-actions";
 
+      // SELECIONAR EVENTO
+      const selectButton = document.createElement("button");
+      selectButton.type = "button";
+      selectButton.className = "event-card-button";
+      selectButton.textContent =
+        currentEvent?.id === event.id
+          ? "Evento selecionado ✓"
+          : "Selecionar evento";
+      selectButton.disabled = currentEvent?.id === event.id;
+
+      selectButton.addEventListener("click", async () => {
+        if (typeof window.selectEvent !== "function") {
+          notify("A função de seleção ainda não está disponível.", "error");
+          return;
+        }
+
+        selectButton.disabled = true;
+        selectButton.textContent = "A selecionar...";
+
+        try {
+          await window.selectEvent(event.id);
+        } catch (error) {
+          console.error("Erro ao selecionar evento:", error);
+          notify(error.message || "Não foi possível selecionar o evento.", "error");
+        } finally {
+          renderEvents(container, list);
+        }
+      });
+
       const copyCode = document.createElement("button");
       copyCode.type = "button";
       copyCode.className = "event-card-button";
@@ -721,7 +813,7 @@
       link.href = getEventUrl(event);
       link.textContent = "Abrir evento";
 
-      actions.append(copyCode, copyLink, link);
+      actions.append(selectButton, copyCode, copyLink, link);
 
       body.append(title, date, status, codeContainer, actions);
       item.append(cover, body);
@@ -771,14 +863,22 @@
       form.querySelector("#eventEndInput")?.value ||
       null;
 
-    const cover = form.querySelector('[name="cover_url"]')?.value || null;
+    const coverInput = document.querySelector("#eventCoverInput");
+    const coverFile = coverInput?.files?.[0] || null;
 
     try {
+      let coverUrl = null;
+
+      if (coverFile) {
+        notify("A carregar capa do evento...");
+        coverUrl = await uploadImage(coverFile, "events/covers");
+      }
+
       const event = await createEvent({
         name,
         description,
         event_date: eventDate,
-        cover_url: cover,
+        cover_url: coverUrl,
         starts_at: startsAt,
         ends_at: endsAt,
         submissions_paused: false,
@@ -798,9 +898,7 @@
       return event;
     } catch (error) {
       handleError(error, "Falha ao criar evento");
-
       notify(error.message || "Erro ao criar evento.", "error");
-
       throw error;
     }
   }
@@ -835,6 +933,7 @@
 
   window.SnapQuestEvents = Object.freeze({
     EventStatus,
+    uploadImage,
 
     loadEvents,
     getEvents,

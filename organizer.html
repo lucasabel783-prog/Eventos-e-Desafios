@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="pt">
   <head>
@@ -26,7 +25,6 @@
   </head>
 
   <body class="dashboard-page">
-
     <!-- AUTH SCREEN -->
     <section class="auth-screen" id="authScreen">
       <div class="auth-decoration"></div>
@@ -151,10 +149,8 @@
 
     <!-- DASHBOARD -->
     <div class="dashboard-layout" id="dashboardLayout" hidden>
-
       <!-- SIDEBAR -->
       <aside class="dashboard-sidebar" id="dashboardSidebar">
-
         <a href="index.html" class="logo sidebar-logo">
           <span class="logo-icon">S</span>
           <span>SnapQuest<span class="logo-dot">.</span></span>
@@ -237,7 +233,6 @@
 
       <!-- MAIN DASHBOARD -->
       <main class="dashboard-main">
-
         <header class="dashboard-topbar">
           <div class="topbar-left">
             <button
@@ -268,7 +263,6 @@
 
         <!-- OVERVIEW -->
         <section class="dashboard-section active" id="overviewSection">
-
           <div class="dashboard-welcome">
             <div>
               <span class="section-tag">O TEU ESPAÇO DE CRIAÇÃO</span>
@@ -283,7 +277,6 @@
           </div>
 
           <div class="dashboard-stats">
-
             <article class="stat-card">
               <div class="stat-card-top">
                 <span>Eventos criados</span>
@@ -319,7 +312,6 @@
               <strong id="totalCompleted">0</strong>
               <small>Desafios realizados</small>
             </article>
-
           </div>
 
           <div class="dashboard-content-block">
@@ -358,7 +350,6 @@
 
         <!-- EVENTS -->
         <section class="dashboard-section" id="eventsSection">
-
           <div class="section-page-heading">
             <div>
               <span class="section-tag">GESTÃO DE EVENTOS</span>
@@ -415,7 +406,6 @@
 
         <!-- CHALLENGES -->
         <section class="dashboard-section" id="challengesSection">
-
           <div class="section-page-heading">
             <div>
               <span class="section-tag">CRIATIVIDADE</span>
@@ -491,7 +481,6 @@
         <!-- CHALLENGE MODAL -->
         <div class="modal-overlay" id="challengeModal">
           <div class="modal-content challenge-modal-content">
-
             <div class="modal-header">
               <div>
                 <span class="section-tag">GESTÃO DE DESAFIOS</span>
@@ -531,12 +520,22 @@
               </div>
 
               <div class="form-group">
-                <label for="challengeImageUrl">URL da imagem (opcional)</label>
+                <label for="challengeImageFile"
+                  >Ilustração do desafio (opcional)</label
+                >
+
                 <input
-                  type="url"
-                  id="challengeImageUrl"
-                  placeholder="https://..."
+                  type="file"
+                  id="challengeImageFile"
+                  accept="image/jpeg,image/png,image/webp"
                 />
+
+                <small>JPG, PNG ou WEBP. Máximo de 8 MB.</small>
+
+                <div
+                  id="challengeImagePreview"
+                  class="challenge-image-preview"
+                ></div>
               </div>
 
               <div class="form-group">
@@ -609,22 +608,19 @@
 
         <!-- NOVO: MODO PROJETOR -->
         <section class="dashboard-section" id="projectorSection">
-
           <div class="section-page-heading">
             <div>
               <span class="section-tag">EXPERIÊNCIA AO VIVO</span>
               <h1>Modo Projetor</h1>
               <p>
-                Mostra as fotografias dos participantes numa televisão
-                ou projetor.
+                Mostra as fotografias dos participantes numa televisão ou
+                projetor.
               </p>
             </div>
           </div>
 
           <div class="projector-settings">
-            <label for="projectorEventSelect">
-              Seleciona o evento
-            </label>
+            <label for="projectorEventSelect"> Seleciona o evento </label>
 
             <select id="projectorEventSelect">
               <option value="">A carregar eventos...</option>
@@ -670,13 +666,11 @@
             <p>As opções de conta serão integradas posteriormente.</p>
           </div>
         </section>
-
       </main>
     </div>
 
     <!-- JANELA DE PROJEÇÃO EM ECRÃ INTEIRO -->
     <div id="projectorOverlay" class="projector-overlay" hidden>
-
       <button id="closeProjectorButton" class="projector-close">
         <i data-lucide="x"></i>
         Sair da projeção
@@ -699,16 +693,13 @@
 
         <span id="projectorCounter">0 / 0</span>
       </div>
-
     </div>
 
     <!-- CREATE EVENT MODAL -->
     <div class="dashboard-modal" id="createEventModal" aria-hidden="true">
-
       <div class="modal-backdrop" data-close-modal></div>
 
       <div class="dashboard-modal-content">
-
         <div class="modal-header">
           <div>
             <span class="section-tag">NOVO PROJETO</span>
@@ -722,7 +713,6 @@
         </div>
 
         <form id="createEventForm">
-
           <label for="eventTitle">Nome do evento</label>
           <input
             type="text"
@@ -790,7 +780,6 @@
               <i data-lucide="arrow-right"></i>
             </button>
           </div>
-
         </form>
       </div>
     </div>
@@ -874,9 +863,7 @@
         });
 
         const section = document.getElementById(sectionName + "Section");
-        const link = document.querySelector(
-          `[data-section="${sectionName}"]`
-        );
+        const link = document.querySelector(`[data-section="${sectionName}"]`);
 
         if (section) section.classList.add("active");
         if (link) link.classList.add("active");
@@ -948,7 +935,7 @@
         if (typeof window.filterOrganizerEvents === "function") {
           window.filterOrganizerEvents(
             eventSearch.value,
-            eventStatusFilter.value
+            eventStatusFilter.value,
           );
         }
       }
@@ -964,7 +951,7 @@
 
           if (typeof window.createOrganizerEvent !== "function") {
             alert(
-              "A criação de eventos será ativada após a integração com o backend."
+              "A criação de eventos será ativada após a integração com o backend.",
             );
             return;
           }
@@ -974,6 +961,5 @@
           });
         });
     </script>
-
   </body>
 </html>
