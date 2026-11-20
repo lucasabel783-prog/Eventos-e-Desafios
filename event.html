@@ -1659,25 +1659,51 @@
             </div>
 
             <div class="sq-form-group">
-              <label>Fotografia</label>
+              <div class="sq-form-group">
+                <label>Fotografia</label>
 
-              <label class="sq-file-label" for="submissionFile">
-                <strong>Escolher fotografia</strong>
-                <span id="fileName">JPG, PNG ou WEBP · Máximo 10 MB</span>
+                <div
+                  style="
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 10px;
+                  "
+                >
+                  <label class="sq-file-label" for="submissionFile">
+                    <strong>▧ Escolher da galeria</strong>
+                    <span>Selecionar fotografia</span>
+                    <input
+                      type="file"
+                      id="submissionFile"
+                      accept="image/jpeg,image/png,image/webp"
+                    />
+                  </label>
 
-                <input
-                  type="file"
-                  id="submissionFile"
-                  accept="image/jpeg,image/png,image/webp"
-                  required
+                  <label class="sq-file-label" for="cameraFile">
+                    <strong>📷 Tirar fotografia</strong>
+                    <span>Abrir a câmara</span>
+                    <input
+                      type="file"
+                      id="cameraFile"
+                      accept="image/*"
+                      capture="environment"
+                    />
+                  </label>
+                </div>
+
+                <div
+                  id="fileName"
+                  style="font-size: 12px; color: #888397; margin-top: 10px"
+                >
+                  JPG, PNG ou WEBP · Máximo 10 MB
+                </div>
+
+                <img
+                  id="imagePreview"
+                  class="sq-preview sq-hidden"
+                  alt="Pré-visualização da fotografia"
                 />
-              </label>
-
-              <img
-                id="imagePreview"
-                class="sq-preview sq-hidden"
-                alt="Pré-visualização da fotografia"
-              />
+              </div>
             </div>
 
             <div class="sq-form-group">
@@ -1773,6 +1799,7 @@
         let submissions = [];
         let selectedFile = null;
         let realtimeChannel = null;
+        let previewObjectUrl = null;
 
         // =====================================
         // UTILITÁRIOS
@@ -1794,7 +1821,6 @@
 
         function showScreen(screen) {
           $("#codeScreen").classList.toggle("sq-hidden", screen !== "code");
-
           $("#eventScreen").classList.toggle("sq-hidden", screen !== "event");
         }
 
@@ -2007,9 +2033,7 @@
           }
 
           $("#participantCount").textContent = participantsResult.count ?? 0;
-
           $("#challengeCount").textContent = challengesResult.count ?? 0;
-
           $("#photoCount").textContent = photosResult.count ?? 0;
         }
 
@@ -2249,44 +2273,89 @@
         }
 
         // =====================================
-        // ENVIAR FOTOGRAFIA
+        // FOTOGRAFIAS — GALERIA E CÂMARA
         // =====================================
 
-        $("#submissionFile").addEventListener("change", (event) => {
-          const file = event.target.files?.[0];
-
+        function clearPhotoPreview() {
           selectedFile = null;
 
-          $("#imagePreview").classList.add("sq-hidden");
+          $("#submissionFile").value = "";
+          $("#cameraFile").value = "";
 
-          if (!file) {
-            $("#fileName").textContent = "JPG, PNG ou WEBP · Máximo 10 MB";
-            return;
+          $("#fileName").textContent = "JPG, PNG ou WEBP · Máximo 10 MB";
+
+          if (previewObjectUrl) {
+            URL.revokeObjectURL(previewObjectUrl);
+            previewObjectUrl = null;
           }
+
+          $("#imagePreview").src = "";
+          $("#imagePreview").classList.add("sq-hidden");
+        }
+
+        function handleSelectedFile(file, input) {
+          if (!file) return;
 
           const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
 
           if (!allowedTypes.includes(file.type)) {
-            event.target.value = "";
-            toast("Formato de imagem não permitido.", "error");
+            clearPhotoPreview();
+
+            toast("Formato não permitido. Usa JPG, PNG ou WEBP.", "error");
+
             return;
           }
 
           if (file.size > 10 * 1024 * 1024) {
-            event.target.value = "";
+            clearPhotoPreview();
+
             toast("A fotografia não pode ultrapassar 10 MB.", "error");
+
             return;
           }
 
           selectedFile = file;
 
-          $("#fileName").textContent = file.name;
+          const galleryInput = $("#submissionFile");
+          const cameraInput = $("#cameraFile");
+
+          if (input !== galleryInput) {
+            galleryInput.value = "";
+          }
+
+          if (input !== cameraInput) {
+            cameraInput.value = "";
+          }
+
+          $("#fileName").textContent = file.name || "Fotografia capturada";
+
+          if (previewObjectUrl) {
+            URL.revokeObjectURL(previewObjectUrl);
+          }
+
+          previewObjectUrl = URL.createObjectURL(file);
 
           const preview = $("#imagePreview");
 
-          preview.src = URL.createObjectURL(file);
+          preview.src = previewObjectUrl;
           preview.classList.remove("sq-hidden");
+        }
+
+        // Escolher fotografia da galeria
+
+        $("#submissionFile").addEventListener("change", (event) => {
+          handleSelectedFile(event.target.files?.[0], event.target);
         });
+
+        // Tirar fotografia com a câmara
+
+        $("#cameraFile").addEventListener("change", (event) => {
+          handleSelectedFile(event.target.files?.[0], event.target);
+        });
+
+        // =====================================
+        // ENVIAR FOTOGRAFIA PARA O SUPABASE
+        // =====================================
 
         $("#submissionForm").addEventListener("submit", async (event) => {
           event.preventDefault();
@@ -2297,7 +2366,7 @@
           }
 
           if (!selectedFile) {
-            toast("Escolhe uma fotografia.", "error");
+            toast("Escolhe ou tira uma fotografia.", "error");
             return;
           }
 
@@ -2338,11 +2407,7 @@
 
             $("#submissionForm").reset();
 
-            selectedFile = null;
-
-            $("#fileName").textContent = "JPG, PNG ou WEBP · Máximo 10 MB";
-
-            $("#imagePreview").classList.add("sq-hidden");
+            clearPhotoPreview();
 
             await loadGallery();
             await loadStatistics();
@@ -2501,6 +2566,7 @@
 
         document.addEventListener("snapquest:event-load-error", (event) => {
           showScreen("code");
+
           showError(
             $("#codeError"),
             event.detail?.message || "Erro ao carregar evento.",
@@ -2523,7 +2589,6 @@
           }
         });
 
-        // A página começa com o formulário de código.
         showScreen("code");
       })();
     </script>

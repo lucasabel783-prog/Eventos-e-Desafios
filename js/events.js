@@ -260,27 +260,40 @@
     const data = normalizeEventData(eventData);
 
     data.created_by = user.id;
-    console.log("ID autenticado:", user.id);
-    console.log("created_by enviado:", data.created_by);
-    console.log("Dados completos:", JSON.stringify(data, null, 2));
     data.status = data.status || EventStatus.DRAFT;
 
     validateEvent(data);
 
-    console.log("[SnapQuest] Dados enviados:", data);
+    console.log("[SnapQuest] A criar evento:", data);
 
-    const { data: createdEvent, error } = await client
-      .from("events")
-      .insert(data)
-      .select("*")
-      .single();
+    // 1. Inserir o evento sem pedir imediatamente os dados de volta.
+    const { error: insertError } = await client.from("events").insert(data);
 
-    if (error) {
-      handleError(error, "Erro ao criar evento");
-      throw error;
+    if (insertError) {
+      handleError(insertError, "Erro ao inserir evento");
+      throw insertError;
     }
 
-    events.unshift(createdEvent);
+    // 2. Atualizar a lista de eventos.
+    await loadEvents();
+
+    // 3. Procurar o evento acabado de criar.
+    const createdEvent = events.find(
+      (event) =>
+        event.created_by === user.id &&
+        event.name === data.name &&
+        event.created_at &&
+        !events.some(
+          (other) =>
+            other.id !== event.id && other.created_at > event.created_at,
+        ),
+    );
+
+    if (!createdEvent) {
+      throw new Error(
+        "O evento foi inserido, mas não foi possível recuperá-lo.",
+      );
+    }
 
     emit("event-created", {
       event: createdEvent,
