@@ -1,4 +1,3 @@
-
 /* =========================================
    SNAPQUEST — EVENTS.JS
    Gestão completa de eventos com Supabase
@@ -55,9 +54,7 @@
   }
 
   function emit(name, detail = {}) {
-    window.dispatchEvent(
-      new CustomEvent(`snapquest:${name}`, { detail })
-    );
+    window.dispatchEvent(new CustomEvent(`snapquest:${name}`, { detail }));
   }
 
   function normalizePublicId(publicId) {
@@ -124,10 +121,7 @@
       throw new Error("O nome do evento é demasiado longo.");
     }
 
-    if (
-      data.status &&
-      !Object.values(EventStatus).includes(data.status)
-    ) {
+    if (data.status && !Object.values(EventStatus).includes(data.status)) {
       throw new Error("Estado de evento inválido.");
     }
 
@@ -141,9 +135,7 @@
 
     if (data.starts_at && data.ends_at) {
       if (new Date(data.ends_at) <= new Date(data.starts_at)) {
-        throw new Error(
-          "A data de fim tem de ser posterior à data de início."
-        );
+        throw new Error("A data de fim tem de ser posterior à data de início.");
       }
     }
   }
@@ -210,7 +202,7 @@
 
     if (currentEvent?.id) {
       currentEvent =
-        events.find(event => event.id === currentEvent.id) || currentEvent;
+        events.find((event) => event.id === currentEvent.id) || currentEvent;
     }
 
     emit("events-loaded", { events });
@@ -223,7 +215,7 @@
   }
 
   function getEventById(id) {
-    return events.find(event => event.id === id) || null;
+    return events.find((event) => event.id === id) || null;
   }
 
   function getEventByPublicId(publicId) {
@@ -231,9 +223,7 @@
 
     if (!normalized) return null;
 
-    return (
-      events.find(event => getPublicId(event) === normalized) || null
-    );
+    return events.find((event) => getPublicId(event) === normalized) || null;
   }
 
   function getCurrentEvent() {
@@ -257,8 +247,7 @@
   async function createEvent(eventData) {
     const client = requireClient();
 
-    const { data: authData, error: authError } =
-      await client.auth.getUser();
+    const { data: authData, error: authError } = await client.auth.getUser();
 
     if (authError) throw authError;
 
@@ -271,6 +260,9 @@
     const data = normalizeEventData(eventData);
 
     data.created_by = user.id;
+    console.log("ID autenticado:", user.id);
+    console.log("created_by enviado:", data.created_by);
+    console.log("Dados completos:", JSON.stringify(data, null, 2));
     data.status = data.status || EventStatus.DRAFT;
 
     validateEvent(data);
@@ -312,8 +304,8 @@
       throw new Error("Não existem alterações.");
     }
 
-    const existing = getEventById(id) ||
-      (currentEvent?.id === id ? currentEvent : null);
+    const existing =
+      getEventById(id) || (currentEvent?.id === id ? currentEvent : null);
 
     if (!existing) {
       throw new Error("Não foi possível encontrar o evento.");
@@ -336,9 +328,7 @@
       throw error;
     }
 
-    events = events.map(event =>
-      event.id === id ? updated : event
-    );
+    events = events.map((event) => (event.id === id ? updated : event));
 
     if (currentEvent?.id === id) {
       setCurrentEvent(updated);
@@ -370,8 +360,8 @@
   }
 
   async function resumeSubmissions(id) {
-    const event = getEventById(id) ||
-      (currentEvent?.id === id ? currentEvent : null);
+    const event =
+      getEventById(id) || (currentEvent?.id === id ? currentEvent : null);
 
     if (!event) {
       throw new Error("Não foi possível encontrar o evento.");
@@ -379,14 +369,12 @@
 
     if (event.status === EventStatus.ENDED) {
       throw new Error(
-        "Não é possível retomar submissões num evento terminado."
+        "Não é possível retomar submissões num evento terminado.",
       );
     }
 
     if (event.status !== EventStatus.PUBLISHED) {
-      throw new Error(
-        "Só é possível retomar submissões num evento publicado."
-      );
+      throw new Error("Só é possível retomar submissões num evento publicado.");
     }
 
     return updateEvent(id, {
@@ -415,17 +403,14 @@
   async function deleteEvent(id) {
     const client = requireClient();
 
-    const { error } = await client
-      .from("events")
-      .delete()
-      .eq("id", id);
+    const { error } = await client.from("events").delete().eq("id", id);
 
     if (error) {
       handleError(error, "Erro ao eliminar evento");
       throw error;
     }
 
-    events = events.filter(event => event.id !== id);
+    events = events.filter((event) => event.id !== id);
 
     if (currentEvent?.id === id) {
       setCurrentEvent(null);
@@ -466,27 +451,22 @@
 
     await loadEvents();
 
-    const createdEvent = events.find(
-      event => event.id === newEvent.id
-    );
+    const createdEvent = events.find((event) => event.id === newEvent.id);
 
     if (!createdEvent) {
-      throw new Error(
-        "Não foi possível localizar o evento duplicado."
-      );
+      throw new Error("Não foi possível localizar o evento duplicado.");
     }
 
-    const { data: originalChallenges, error: challengeError } =
-      await client
-        .from("challenges")
-        .select("*")
-        .eq("event_id", id)
-        .order("position", { ascending: true });
+    const { data: originalChallenges, error: challengeError } = await client
+      .from("challenges")
+      .select("*")
+      .eq("event_id", id)
+      .order("position", { ascending: true });
 
     if (challengeError) throw challengeError;
 
     if (originalChallenges?.length) {
-      const copies = originalChallenges.map(challenge => ({
+      const copies = originalChallenges.map((challenge) => ({
         event_id: createdEvent.id,
         batch_id: null,
         title: challenge.title,
@@ -524,7 +504,7 @@
 
     const basePath = window.location.href.substring(
       0,
-      window.location.href.lastIndexOf("/") + 1
+      window.location.href.lastIndexOf("/") + 1,
     );
 
     return `${basePath}event.html?code=${encodeURIComponent(publicId)}`;
@@ -535,10 +515,7 @@
 
     if (!url) return "";
 
-    const safeSize = Math.max(
-      100,
-      Math.min(1000, Number(size) || 300)
-    );
+    const safeSize = Math.max(100, Math.min(1000, Number(size) || 300));
 
     return `https://api.qrserver.com/v1/create-qr-code/?size=${safeSize}x${safeSize}&data=${encodeURIComponent(url)}`;
   }
@@ -568,11 +545,9 @@
         .eq("status", "published"),
     ]);
 
-    const errors = [
-      participants.error,
-      challenges.error,
-      photos.error,
-    ].filter(Boolean);
+    const errors = [participants.error, challenges.error, photos.error].filter(
+      Boolean,
+    );
 
     if (errors.length) {
       throw errors[0];
@@ -598,9 +573,14 @@
 
     if (!term) return getEvents();
 
-    return events.filter(event =>
-      String(event.name || "").toLowerCase().includes(term) ||
-      String(event.description || "").toLowerCase().includes(term)
+    return events.filter(
+      (event) =>
+        String(event.name || "")
+          .toLowerCase()
+          .includes(term) ||
+        String(event.description || "")
+          .toLowerCase()
+          .includes(term),
     );
   }
 
@@ -613,7 +593,7 @@
       return getEvents();
     }
 
-    return events.filter(event => event.status === status);
+    return events.filter((event) => event.status === status);
   }
 
   // =========================================
@@ -627,7 +607,7 @@
 
     if (!container) {
       container = document.querySelector(
-        "#allEvents, #eventsList, .events-list"
+        "#allEvents, #eventsList, .events-list",
       );
     }
 
@@ -643,7 +623,7 @@
       return;
     }
 
-    list.forEach(event => {
+    list.forEach((event) => {
       const item = document.createElement("article");
       item.className = "event-card";
 
@@ -671,20 +651,21 @@
       date.className = "event-card-date";
 
       date.textContent = event.event_date
-        ? new Date(`${event.event_date}T00:00:00`)
-            .toLocaleDateString("pt-PT")
+        ? new Date(`${event.event_date}T00:00:00`).toLocaleDateString("pt-PT")
         : "Data por definir";
 
       const status = document.createElement("span");
-      status.className =
-        `status-badge status-${event.status || "draft"}`;
+      status.className = `status-badge status-${event.status || "draft"}`;
 
-      status.textContent = {
-        draft: "Rascunho",
-        published: "Publicado",
-        ended: "Terminado",
-        archived: "Arquivado",
-      }[event.status] || event.status || "Rascunho";
+      status.textContent =
+        {
+          draft: "Rascunho",
+          published: "Publicado",
+          ended: "Terminado",
+          archived: "Arquivado",
+        }[event.status] ||
+        event.status ||
+        "Rascunho";
 
       const codeContainer = document.createElement("div");
       codeContainer.className = "event-public-access";
@@ -709,10 +690,7 @@
       copyCode.disabled = !getPublicId(event);
 
       copyCode.addEventListener("click", () => {
-        copyText(
-          getPublicId(event),
-          "Código do evento copiado!"
-        );
+        copyText(getPublicId(event), "Código do evento copiado!");
       });
 
       const copyLink = document.createElement("button");
@@ -722,10 +700,7 @@
       copyLink.disabled = !getEventUrl(event);
 
       copyLink.addEventListener("click", () => {
-        copyText(
-          getEventUrl(event),
-          "Link do evento copiado!"
-        );
+        copyText(getEventUrl(event), "Link do evento copiado!");
       });
 
       const link = document.createElement("a");
@@ -750,9 +725,7 @@
     const form = document.querySelector("#createEventForm");
 
     if (!form) {
-      throw new Error(
-        "Formulário de criação de evento não encontrado."
-      );
+      throw new Error("Formulário de criação de evento não encontrado.");
     }
 
     const name =
@@ -785,8 +758,7 @@
       form.querySelector("#eventEndInput")?.value ||
       null;
 
-    const cover =
-      form.querySelector('[name="cover_url"]')?.value || null;
+    const cover = form.querySelector('[name="cover_url"]')?.value || null;
 
     try {
       const event = await createEvent({
@@ -801,9 +773,7 @@
 
       form.reset();
 
-      document
-        .querySelector("#createEventModal")
-        ?.classList.remove("active");
+      document.querySelector("#createEventModal")?.classList.remove("active");
 
       await loadEvents();
 
@@ -816,10 +786,7 @@
     } catch (error) {
       handleError(error, "Falha ao criar evento");
 
-      notify(
-        error.message || "Erro ao criar evento.",
-        "error"
-      );
+      notify(error.message || "Erro ao criar evento.", "error");
 
       throw error;
     }
@@ -831,24 +798,19 @@
 
   function filterOrganizerEvents() {
     const search =
-      document.querySelector(
-        "#eventSearch, [data-event-search]"
-      )?.value || "";
+      document.querySelector("#eventSearch, [data-event-search]")?.value || "";
 
-    const status =
-      document.querySelector("#eventStatusFilter")?.value || "all";
+    const status = document.querySelector("#eventStatusFilter")?.value || "all";
 
-    const filtered = filterEvents(status).filter(event =>
+    const filtered = filterEvents(status).filter((event) =>
       String(event.name || "")
         .toLowerCase()
-        .includes(search.toLowerCase())
+        .includes(search.toLowerCase()),
     );
 
     renderEvents(
-      document.querySelector(
-        "#allEvents, #eventsList, .events-list"
-      ),
-      filtered
+      document.querySelector("#allEvents, #eventsList, .events-list"),
+      filtered,
     );
 
     return filtered;
@@ -903,7 +865,7 @@
       await loadEvents();
 
       const container = document.querySelector(
-        "#allEvents, #eventsList, .events-list"
+        "#allEvents, #eventsList, .events-list",
       );
 
       if (container) {
@@ -913,5 +875,4 @@
       handleError(error, "Erro ao inicializar eventos");
     }
   });
-
 })();
