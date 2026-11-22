@@ -2038,7 +2038,7 @@
             <p id="photoDetailAuthor" class="sq-photo-detail-caption"></p>
             <p id="photoDetailCaption" class="sq-photo-detail-caption"></p>
             <div class="sq-photo-modal-actions" style="justify-content:flex-start;margin-top:16px">
-              <button class="sq-button" id="downloadPhotoButton" type="button">▣ Guardar na galeria</button>
+              <button class="sq-button" id="downloadPhotoButton" type="button">▣ Descarregar fotografia</button>
             </div>
           </div>
 
@@ -2804,46 +2804,27 @@
 
             const blob = await response.blob();
             const mimeType = blob.type || "image/jpeg";
-            const extension = mimeType.includes("png") ? "png" :
-              mimeType.includes("webp") ? "webp" : "jpg";
-            const file = new File(
-              [blob],
-              `snapquest-${activePhotoSubmission.id}.${extension}`,
-              { type: mimeType }
-            );
+            const extension = mimeType.includes("png")
+              ? "png"
+              : mimeType.includes("webp")
+                ? "webp"
+                : "jpg";
+            const objectUrl = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = objectUrl;
+            link.download = `snapquest-${activePhotoSubmission.id}.${extension}`;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
 
-            // Em telemóveis, a partilha de ficheiros permite escolher
-            // Galeria/Google Fotos para guardar a imagem.
-            if (
-              navigator.share &&
-              navigator.canShare &&
-              navigator.canShare({ files: [file] })
-            ) {
-              await navigator.share({
-                files: [file],
-                title: "Fotografia do SnapQuest",
-                text: "Guardar fotografia do evento"
-              });
-              toast("Escolhe Galeria ou Google Fotos para guardar a fotografia.");
-            } else {
-              // Fallback para navegadores sem partilha de ficheiros.
-              const objectUrl = URL.createObjectURL(blob);
-              const link = document.createElement("a");
-              link.href = objectUrl;
-              link.download = file.name;
-              document.body.appendChild(link);
-              link.click();
-              link.remove();
-              window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1500);
-              toast("Fotografia descarregada. Abre-a em Transferências para a guardar na galeria.");
-            }
+            setTimeout(() => URL.revokeObjectURL(objectUrl), 1500);
+            toast("Fotografia descarregada. Podes encontrá-la em Transferências.");
           } catch (error) {
-            if (error?.name === "AbortError") return;
-            console.error("[SnapQuest] Erro ao guardar fotografia:", error);
-            toast("Não foi possível preparar a fotografia. Tenta novamente.", "error");
+            console.error("[SnapQuest] Erro ao descarregar fotografia:", error);
+            toast("Não foi possível descarregar a fotografia. Tenta novamente.", "error");
           } finally {
             button.disabled = false;
-            button.textContent = "▣ Guardar na galeria";
+            button.textContent = "▣ Descarregar fotografia";
           }
         });
 
