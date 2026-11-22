@@ -1155,6 +1155,280 @@
         font-weight: 600;
       }
 
+
+      .sq-gallery-item {
+        cursor: pointer;
+        text-align: left;
+        width: 100%;
+        padding: 0;
+        color: inherit;
+        font: inherit;
+      }
+
+      .sq-gallery-item:focus-visible,
+      .sq-projector-control:focus-visible {
+        outline: 3px solid #ff8065;
+        outline-offset: 4px;
+      }
+
+      .sq-gallery-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .sq-photo-modal {
+        z-index: 150;
+        overflow-y: auto;
+        align-items: start;
+      }
+
+      .sq-photo-modal-content {
+        width: min(1050px, 100%);
+        margin: auto;
+        padding: 22px;
+        background: #fff;
+        border: 1px solid #f0e5dd;
+        border-radius: 22px;
+        box-shadow: 0 25px 80px rgba(34, 25, 40, 0.22);
+      }
+
+      .sq-photo-modal-top,
+      .sq-photo-modal-actions,
+      .sq-projector-top,
+      .sq-projector-controls {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .sq-photo-modal-top h2 {
+        margin: 0;
+        font: 800 21px "Manrope", sans-serif;
+      }
+
+      .sq-photo-detail-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.8fr);
+        gap: 22px;
+        margin-top: 18px;
+      }
+
+      .sq-photo-detail-image-wrap {
+        display: grid;
+        place-items: center;
+        min-height: 300px;
+        background: #f8f4f1;
+        border-radius: 16px;
+        overflow: hidden;
+      }
+
+      .sq-photo-detail-image {
+        display: block;
+        max-width: 100%;
+        max-height: 68vh;
+        object-fit: contain;
+      }
+
+      .sq-photo-detail-caption {
+        color: #6f687c;
+        line-height: 1.6;
+        margin: 12px 0 0;
+        overflow-wrap: anywhere;
+      }
+
+      .sq-photo-comments {
+        display: flex;
+        flex-direction: column;
+        min-height: 300px;
+      }
+
+      .sq-photo-comments h3 {
+        margin: 0 0 12px;
+        font: 800 17px "Manrope", sans-serif;
+      }
+
+      .sq-photo-comment-list {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        gap: 10px;
+        max-height: 340px;
+        overflow-y: auto;
+        padding: 2px 4px 12px 0;
+      }
+
+      .sq-photo-comment {
+        padding: 12px 14px;
+        background: #fff8f4;
+        border: 1px solid #f3e8e1;
+        border-radius: 13px;
+      }
+
+      .sq-photo-comment strong {
+        display: block;
+        color: #302642;
+        font-size: 12px;
+        margin-bottom: 5px;
+      }
+
+      .sq-photo-comment p {
+        color: #625c70;
+        font-size: 13px;
+        line-height: 1.5;
+        margin: 0;
+        overflow-wrap: anywhere;
+        white-space: pre-wrap;
+      }
+
+      .sq-photo-comment time {
+        display: block;
+        color: #9992a2;
+        font-size: 10px;
+        margin-top: 7px;
+      }
+
+      .sq-photo-comment-form {
+        display: grid;
+        gap: 9px;
+        margin-top: 12px;
+      }
+
+      .sq-photo-comment-form textarea {
+        min-height: 76px;
+        resize: vertical;
+      }
+
+      .sq-projector {
+        position: fixed;
+        inset: 0;
+        z-index: 300;
+        display: flex;
+        flex-direction: column;
+        padding: 22px;
+        background: #17131f;
+        color: white;
+      }
+
+      .sq-projector[hidden] {
+        display: none !important;
+      }
+
+      .sq-projector-top {
+        width: min(1400px, 100%);
+        margin: 0 auto;
+        color: rgba(255,255,255,.78);
+      }
+
+      .sq-projector-top strong {
+        color: white;
+        font: 800 18px "Manrope", sans-serif;
+      }
+
+      .sq-projector-stage {
+        flex: 1;
+        min-height: 0;
+        display: grid;
+        grid-template-columns: 64px minmax(0, 1fr) 64px;
+        align-items: center;
+        gap: 18px;
+        width: min(1500px, 100%);
+        margin: 18px auto;
+      }
+
+      .sq-projector-image-wrap {
+        display: grid;
+        place-items: center;
+        min-width: 0;
+        min-height: 0;
+        height: 100%;
+      }
+
+      .sq-projector-image {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        border-radius: 10px;
+      }
+
+      .sq-projector-control {
+        width: 58px;
+        height: 58px;
+        border: 1px solid rgba(255,255,255,.18);
+        border-radius: 50%;
+        background: rgba(255,255,255,.1);
+        color: white;
+        font-size: 30px;
+        transition: background .2s, transform .2s;
+      }
+
+      .sq-projector-control:hover {
+        background: rgba(255,255,255,.2);
+        transform: scale(1.05);
+      }
+
+      .sq-projector-bottom {
+        width: min(1400px, 100%);
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      .sq-projector-bottom strong {
+        display: block;
+        font-size: 14px;
+        margin-bottom: 4px;
+      }
+
+      .sq-projector-bottom p {
+        color: rgba(255,255,255,.72);
+        margin: 0 0 7px;
+        font-size: 13px;
+      }
+
+      .sq-projector-counter {
+        color: rgba(255,255,255,.55);
+        font-size: 12px;
+      }
+
+      @media (max-width: 760px) {
+        .sq-photo-detail-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .sq-photo-modal-content {
+          padding: 15px;
+        }
+
+        .sq-photo-detail-image-wrap {
+          min-height: 190px;
+        }
+
+        .sq-photo-comments {
+          min-height: 220px;
+        }
+
+        .sq-gallery-actions {
+          width: 100%;
+          flex-wrap: wrap;
+        }
+
+        .sq-projector {
+          padding: 12px;
+        }
+
+        .sq-projector-stage {
+          grid-template-columns: 42px minmax(0, 1fr) 42px;
+          gap: 7px;
+        }
+
+        .sq-projector-control {
+          width: 40px;
+          height: 40px;
+          font-size: 23px;
+        }
+      }
+
       /* RANKING */
 
       .sq-ranking-item {
@@ -1614,6 +1888,11 @@
             <h2>Galeria</h2>
             <p>Fotografias partilhadas pelos participantes.</p>
           </div>
+          <div class="sq-gallery-actions">
+            <button class="sq-button sq-button-secondary" id="openProjectorButton" type="button">
+              ⛶ Modo projetor
+            </button>
+          </div>
         </div>
 
         <div id="galleryGrid" class="sq-gallery-grid">
@@ -1743,6 +2022,64 @@
       </section>
     </main>
 
+    <!-- DETALHE DA FOTOGRAFIA E COMENTÁRIOS -->
+    <div id="photoDetailModal" class="sq-modal sq-photo-modal sq-hidden" aria-hidden="true">
+      <div class="sq-photo-modal-content" role="dialog" aria-modal="true" aria-labelledby="photoDetailTitle">
+        <div class="sq-photo-modal-top">
+          <h2 id="photoDetailTitle">Fotografia</h2>
+          <button class="sq-button sq-button-secondary" id="closePhotoDetailButton" type="button">Fechar ✕</button>
+        </div>
+
+        <div class="sq-photo-detail-layout">
+          <div>
+            <div class="sq-photo-detail-image-wrap">
+              <img id="photoDetailImage" class="sq-photo-detail-image" alt="Fotografia do evento" />
+            </div>
+            <p id="photoDetailAuthor" class="sq-photo-detail-caption"></p>
+            <p id="photoDetailCaption" class="sq-photo-detail-caption"></p>
+            <div class="sq-photo-modal-actions" style="justify-content:flex-start;margin-top:16px">
+              <button class="sq-button" id="downloadPhotoButton" type="button">↓ Guardar fotografia</button>
+            </div>
+          </div>
+
+          <section class="sq-photo-comments" aria-label="Comentários da fotografia">
+            <h3>Comentários</h3>
+            <div id="photoCommentList" class="sq-photo-comment-list">
+              <p class="sq-photo-detail-caption">A carregar comentários...</p>
+            </div>
+            <p id="photoCommentsJoinNotice" class="sq-photo-detail-caption sq-hidden">
+              Entra neste evento para veres e publicares comentários.
+            </p>
+            <form id="photoCommentForm" class="sq-photo-comment-form sq-hidden">
+              <textarea id="photoCommentInput" class="sq-input" maxlength="500" placeholder="Escreve um comentário..." required></textarea>
+              <button id="sendPhotoCommentButton" class="sq-button" type="submit">Publicar comentário</button>
+            </form>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODO PROJETOR PÚBLICO (NAVEGAÇÃO MANUAL) -->
+    <div id="publicProjector" class="sq-projector" hidden>
+      <div class="sq-projector-top">
+        <strong>SNAPQUEST · PROJETOR</strong>
+        <button id="closePublicProjectorButton" class="sq-button sq-button-secondary" type="button">Fechar ✕</button>
+      </div>
+      <div class="sq-projector-stage">
+        <button id="projectorPreviousButton" class="sq-projector-control" type="button" aria-label="Fotografia anterior">‹</button>
+        <div class="sq-projector-image-wrap">
+          <img id="publicProjectorImage" class="sq-projector-image" alt="Fotografia do evento" />
+        </div>
+        <button id="projectorNextButton" class="sq-projector-control" type="button" aria-label="Fotografia seguinte">›</button>
+      </div>
+      <div class="sq-projector-bottom">
+        <strong id="publicProjectorAuthor"></strong>
+        <p id="publicProjectorCaption"></p>
+        <span id="publicProjectorCounter" class="sq-projector-counter"></span>
+        <p style="margin-top:7px">Apresentação pausada · utiliza as setas para navegar</p>
+      </div>
+    </div>
+
     <!-- MODAL PARA ALTERAR NOME -->
 
     <div id="nameModal" class="sq-modal sq-hidden">
@@ -1812,6 +2149,11 @@
         let selectedFile = null;
         let realtimeChannel = null;
         let previewObjectUrl = null;
+        let activePhotoSubmission = null;
+        let activePhotoUrl = null;
+        let projectorPhotos = [];
+        let projectorIndex = 0;
+        let photoCommentsChannel = null;
 
         // =====================================
         // UTILITÁRIOS
@@ -1943,6 +2285,13 @@
 
         function renderParticipant(participant) {
           currentParticipant = participant;
+
+          if (activePhotoSubmission && !$("#photoDetailModal").classList.contains("sq-hidden")) {
+            $("#photoCommentForm").classList.remove("sq-hidden");
+            $("#photoCommentsJoinNotice").classList.add("sq-hidden");
+            loadPhotoComments();
+            subscribeToPhotoComments(activePhotoSubmission.id);
+          }
 
           $("#joinSection").classList.add("sq-hidden");
           $("#profileSection").classList.remove("sq-hidden");
@@ -2200,27 +2549,32 @@
 
         async function renderGallery() {
           const grid = $("#galleryGrid");
-
           grid.replaceChildren();
 
-          if (!submissions.length) {
+          const visibleSubmissions = submissions.filter(
+            (submission) => submission.status === "published",
+          );
+
+          if (!visibleSubmissions.length) {
             emptyState(
               grid,
               "▧",
               "A galeria está vazia",
-              "As fotografias enviadas pelos participantes aparecerão aqui.",
+              "As fotografias publicadas pelos participantes aparecerão aqui.",
             );
             return;
           }
 
-          for (const submission of submissions) {
+          for (const submission of visibleSubmissions) {
             const url = await api().Storage.getPublicUrl(
               "photos",
               submission.storage_path,
             );
 
-            const card = document.createElement("article");
+            const card = document.createElement("button");
             card.className = "sq-gallery-item";
+            card.type = "button";
+            card.setAttribute("aria-label", "Abrir fotografia e comentários");
 
             const image = document.createElement("img");
             image.src = url;
@@ -2229,13 +2583,326 @@
 
             const caption = document.createElement("div");
             caption.className = "sq-gallery-caption";
-
             caption.textContent = submission.caption || "Fotografia partilhada";
 
             card.append(image, caption);
+            card.addEventListener("click", () => openPhotoDetail(submission, url));
             grid.appendChild(card);
           }
         }
+
+        // =====================================
+        // DETALHE DA FOTOGRAFIA E COMENTÁRIOS
+        // =====================================
+
+        function getSubmissionParticipant(submission) {
+          const participant = Array.isArray(submission.event_participants)
+            ? submission.event_participants[0]
+            : submission.event_participants;
+          return participant || null;
+        }
+
+        async function openPhotoDetail(submission, url) {
+          activePhotoSubmission = submission;
+          activePhotoUrl = url;
+
+          const participant = getSubmissionParticipant(submission);
+          $("#photoDetailImage").src = url;
+          $("#photoDetailImage").alt = submission.caption || "Fotografia do evento";
+          $("#photoDetailAuthor").textContent = participant?.name
+            ? `Fotografia de ${participant.name}`
+            : "Fotografia partilhada no evento";
+          $("#photoDetailCaption").textContent = submission.caption || "";
+          $("#photoDetailModal").classList.remove("sq-hidden");
+          $("#photoDetailModal").setAttribute("aria-hidden", "false");
+
+          const isParticipant = Boolean(currentParticipant?.id);
+          $("#photoCommentForm").classList.toggle("sq-hidden", !isParticipant);
+          $("#photoCommentsJoinNotice").classList.toggle("sq-hidden", isParticipant);
+          $("#photoCommentInput").value = "";
+
+          await loadPhotoComments();
+          subscribeToPhotoComments(submission.id);
+        }
+
+        function subscribeToPhotoComments(photoId) {
+          if (photoCommentsChannel) {
+            api().client.removeChannel(photoCommentsChannel);
+            photoCommentsChannel = null;
+          }
+
+          if (!currentParticipant?.id) return;
+
+          photoCommentsChannel = api().client
+            .channel(`photo-comments-${photoId}`)
+            .on(
+              "postgres_changes",
+              {
+                event: "*",
+                schema: "public",
+                table: "photo_comments",
+                filter: `photo_id=eq.${photoId}`,
+              },
+              () => {
+                if (activePhotoSubmission?.id === photoId) {
+                  loadPhotoComments();
+                }
+              },
+            )
+            .subscribe();
+        }
+
+        function closePhotoDetail() {
+          if (photoCommentsChannel) {
+            api().client.removeChannel(photoCommentsChannel);
+            photoCommentsChannel = null;
+          }
+
+          $("#photoDetailModal").classList.add("sq-hidden");
+          $("#photoDetailModal").setAttribute("aria-hidden", "true");
+          $("#photoDetailImage").removeAttribute("src");
+          activePhotoSubmission = null;
+          activePhotoUrl = null;
+        }
+
+        function renderPhotoComments(comments) {
+          const list = $("#photoCommentList");
+          list.replaceChildren();
+
+          if (!comments.length) {
+            const empty = document.createElement("p");
+            empty.className = "sq-photo-detail-caption";
+            empty.textContent = "Ainda não existem comentários. Sê o primeiro a comentar.";
+            list.appendChild(empty);
+            return;
+          }
+
+          comments.forEach((comment) => {
+            const item = document.createElement("article");
+            item.className = "sq-photo-comment";
+
+            const author = Array.isArray(comment.event_participants)
+              ? comment.event_participants[0]
+              : comment.event_participants;
+
+            const name = document.createElement("strong");
+            name.textContent = author?.name || "Participante";
+
+            const content = document.createElement("p");
+            content.textContent = comment.content;
+
+            const date = document.createElement("time");
+            date.dateTime = comment.created_at;
+            date.textContent = new Date(comment.created_at).toLocaleString("pt-PT", {
+              day: "2-digit",
+              month: "short",
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+
+            item.append(name, content, date);
+            list.appendChild(item);
+          });
+        }
+
+        async function loadPhotoComments() {
+          const list = $("#photoCommentList");
+          list.replaceChildren();
+
+          if (!activePhotoSubmission || !currentParticipant?.id) {
+            const notice = document.createElement("p");
+            notice.className = "sq-photo-detail-caption";
+            notice.textContent = "Entra no evento para veres os comentários desta fotografia.";
+            list.appendChild(notice);
+            return;
+          }
+
+          const loadingMessage = document.createElement("p");
+          loadingMessage.className = "sq-photo-detail-caption";
+          loadingMessage.textContent = "A carregar comentários...";
+          list.appendChild(loadingMessage);
+
+          const { data, error } = await api().client
+            .from("photo_comments")
+            .select("id, content, created_at, participant_id, event_participants(name)")
+            .eq("photo_id", activePhotoSubmission.id)
+            .eq("event_id", currentEvent.id)
+            .order("created_at", { ascending: true });
+
+          if (error) {
+            console.error("[SnapQuest] Erro ao carregar comentários:", error);
+            list.replaceChildren();
+            const errorMessage = document.createElement("p");
+            errorMessage.className = "sq-photo-detail-caption";
+            errorMessage.textContent = "Não foi possível carregar os comentários.";
+            list.appendChild(errorMessage);
+            return;
+          }
+
+          renderPhotoComments(data || []);
+        }
+
+        $("#photoCommentForm").addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          if (!currentParticipant?.id || !activePhotoSubmission) {
+            toast("Entra no evento para comentar.", "error");
+            return;
+          }
+
+          const input = $("#photoCommentInput");
+          const content = input.value.trim();
+          const button = $("#sendPhotoCommentButton");
+
+          if (!content || content.length > 500) {
+            toast("O comentário deve ter entre 1 e 500 caracteres.", "error");
+            return;
+          }
+
+          button.disabled = true;
+          button.textContent = "A publicar...";
+
+          try {
+            const { error } = await api().client.from("photo_comments").insert({
+              photo_id: activePhotoSubmission.id,
+              event_id: currentEvent.id,
+              participant_id: currentParticipant.id,
+              content,
+            });
+
+            if (error) throw error;
+
+            input.value = "";
+            await loadPhotoComments();
+            toast("Comentário publicado!");
+          } catch (error) {
+            console.error("[SnapQuest] Erro ao publicar comentário:", error);
+            toast(error.message || "Não foi possível publicar o comentário.", "error");
+          } finally {
+            button.disabled = false;
+            button.textContent = "Publicar comentário";
+          }
+        });
+
+        $("#closePhotoDetailButton").addEventListener("click", closePhotoDetail);
+        $("#photoDetailModal").addEventListener("click", (event) => {
+          if (event.target === $("#photoDetailModal")) closePhotoDetail();
+        });
+
+        $("#downloadPhotoButton").addEventListener("click", async () => {
+          if (!activePhotoUrl || !activePhotoSubmission) return;
+
+          const button = $("#downloadPhotoButton");
+          button.disabled = true;
+          button.textContent = "A preparar...";
+
+          try {
+            const response = await fetch(activePhotoUrl);
+            if (!response.ok) throw new Error("Não foi possível obter a fotografia.");
+            const blob = await response.blob();
+            const objectUrl = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = objectUrl;
+            link.download = `snapquest-${activePhotoSubmission.id}.jpg`;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(objectUrl);
+          } catch (error) {
+            console.error("[SnapQuest] Erro ao descarregar fotografia:", error);
+            toast("Não foi possível descarregar. Tenta abrir a imagem num novo separador.", "error");
+            window.open(activePhotoUrl, "_blank", "noopener");
+          } finally {
+            button.disabled = false;
+            button.textContent = "↓ Guardar fotografia";
+          }
+        });
+
+        // =====================================
+        // MODO PROJETOR PÚBLICO — PAUSADO
+        // =====================================
+
+        async function startPublicProjector() {
+          const photos = submissions.filter((submission) => submission.status === "published");
+          if (!photos.length) {
+            toast("Ainda não existem fotografias publicadas.", "error");
+            return;
+          }
+
+          const button = $("#openProjectorButton");
+          button.disabled = true;
+          button.textContent = "A preparar...";
+
+          try {
+            projectorPhotos = [];
+            for (const submission of photos) {
+              const url = await api().Storage.getPublicUrl("photos", submission.storage_path);
+              projectorPhotos.push({ submission, url });
+            }
+
+            projectorIndex = 0;
+            renderPublicProjectorPhoto();
+            $("#publicProjector").hidden = false;
+            document.body.style.overflow = "hidden";
+
+            try {
+              await $("#publicProjector").requestFullscreen();
+            } catch (fullscreenError) {
+              console.warn("[SnapQuest Projector] Ecrã inteiro indisponível:", fullscreenError);
+            }
+          } catch (error) {
+            console.error("[SnapQuest Projector]", error);
+            toast("Não foi possível iniciar o modo projetor.", "error");
+          } finally {
+            button.disabled = false;
+            button.textContent = "⛶ Modo projetor";
+          }
+        }
+
+        function renderPublicProjectorPhoto() {
+          if (!projectorPhotos.length) return;
+          const current = projectorPhotos[projectorIndex];
+          const participant = getSubmissionParticipant(current.submission);
+
+          $("#publicProjectorImage").src = current.url;
+          $("#publicProjectorAuthor").textContent = participant?.name || "Participante";
+          $("#publicProjectorCaption").textContent = current.submission.caption || "";
+          $("#publicProjectorCounter").textContent = `${projectorIndex + 1} / ${projectorPhotos.length}`;
+        }
+
+        function movePublicProjector(direction) {
+          if (!projectorPhotos.length) return;
+          projectorIndex = (projectorIndex + direction + projectorPhotos.length) % projectorPhotos.length;
+          renderPublicProjectorPhoto();
+        }
+
+        async function closePublicProjector() {
+          $("#publicProjector").hidden = true;
+          $("#publicProjectorImage").removeAttribute("src");
+          document.body.style.overflow = "";
+          projectorPhotos = [];
+          projectorIndex = 0;
+
+          if (document.fullscreenElement) {
+            try {
+              await document.exitFullscreen();
+            } catch (error) {
+              console.warn("[SnapQuest Projector] Não foi possível sair do ecrã inteiro:", error);
+            }
+          }
+        }
+
+        $("#openProjectorButton").addEventListener("click", startPublicProjector);
+        $("#projectorPreviousButton").addEventListener("click", () => movePublicProjector(-1));
+        $("#projectorNextButton").addEventListener("click", () => movePublicProjector(1));
+        $("#closePublicProjectorButton").addEventListener("click", closePublicProjector);
+
+        document.addEventListener("keydown", (event) => {
+          if ($("#publicProjector").hidden) return;
+          if (event.key === "ArrowLeft") movePublicProjector(-1);
+          if (event.key === "ArrowRight") movePublicProjector(1);
+          if (event.key === "Escape") closePublicProjector();
+        });
 
         // =====================================
         // RANKING
@@ -2588,6 +3255,11 @@
 
         document.addEventListener("snapquest:participant-required", () => {
           showJoinSection();
+          if (activePhotoSubmission) {
+            $("#photoCommentForm").classList.add("sq-hidden");
+            $("#photoCommentsJoinNotice").classList.remove("sq-hidden");
+            loadPhotoComments();
+          }
         });
 
         document.addEventListener("snapquest:event-load-error", (event) => {
