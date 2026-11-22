@@ -1,4 +1,3 @@
-
 /* =========================================================
    SNAPQUEST — MODO PROJETOR
    Galeria automática em ecrã inteiro
@@ -43,6 +42,105 @@
   let loading = false;
   let activeEventId = null;
   let projectorSession = 0;
+
+  // Controlos de navegação criados pelo próprio modo projetor.
+  const previousButton = document.createElement("button");
+  const nextButton = document.createElement("button");
+
+  previousButton.type = "button";
+  previousButton.className = "snapquest-projector-nav snapquest-projector-prev";
+  previousButton.textContent = "‹";
+  previousButton.setAttribute("aria-label", "Fotografia anterior");
+
+  nextButton.type = "button";
+  nextButton.className = "snapquest-projector-nav snapquest-projector-next";
+  nextButton.textContent = "›";
+  nextButton.setAttribute("aria-label", "Fotografia seguinte");
+
+  overlay.append(previousButton, nextButton);
+
+  // Estilos isolados para não ser necessário alterar o CSS existente.
+  const projectorStyle = document.createElement("style");
+  projectorStyle.textContent = `
+    #projectorOverlay {
+      position: relative;
+    }
+
+    #projectorImage {
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      object-position: center;
+    }
+
+    .snapquest-projector-nav {
+      position: absolute;
+      z-index: 10000;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 58px;
+      height: 78px;
+      padding: 0;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 14px;
+      background: rgba(0, 0, 0, 0.48);
+      color: #fff;
+      font-size: 54px;
+      line-height: 1;
+      cursor: pointer;
+      user-select: none;
+      transition: background 180ms ease, opacity 180ms ease;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .snapquest-projector-nav:hover {
+      background: rgba(0, 0, 0, 0.76);
+    }
+
+    .snapquest-projector-nav:disabled {
+      opacity: 0.25;
+      cursor: default;
+    }
+
+    .snapquest-projector-prev {
+      left: 22px;
+    }
+
+    .snapquest-projector-next {
+      right: 22px;
+    }
+
+    @media (max-width: 600px) {
+      .snapquest-projector-nav {
+        width: 44px;
+        height: 62px;
+        font-size: 42px;
+      }
+
+      .snapquest-projector-prev {
+        left: 10px;
+      }
+
+      .snapquest-projector-next {
+        right: 10px;
+      }
+    }
+  `;
+  document.head.appendChild(projectorStyle);
+
+  // A imagem ocupa a área disponível e é ampliada sem distorção ou cortes.
+  image.style.width = "100%";
+  image.style.height = "100%";
+  image.style.maxWidth = "100%";
+  image.style.maxHeight = "100%";
+  image.style.objectFit = "contain";
+  image.style.objectPosition = "center";
 
   const ROTATION_INTERVAL = 6000;
   const REFRESH_INTERVAL = 10000;
@@ -125,12 +223,10 @@
   // =========================================
 
   function getPhotoUrl(photo) {
-    // Se já existir URL, utilizá-lo.
     if (photo.image_url) {
       return photo.image_url;
     }
 
-    // Caso contrário, gerar URL através do Storage.
     if (photo.storage_path) {
       const { data } = db.storage
         .from(BUCKET)
@@ -181,6 +277,8 @@
         participant.textContent = "";
         caption.textContent = "";
         counter.textContent = "0 fotografias";
+        previousButton.disabled = true;
+        nextButton.disabled = true;
 
         showMessage("Ainda não existem fotografias publicadas neste evento.");
         return;
@@ -229,7 +327,6 @@
         photo.storage_path
       );
 
-      // Tentar URL temporário caso o bucket não seja público.
       if (photo.storage_path) {
         try {
           const { data, error } = await db.storage
@@ -280,6 +377,9 @@
 
     counter.textContent =
       `${currentIndex + 1} / ${photos.length}`;
+
+    previousButton.disabled = photos.length <= 1;
+    nextButton.disabled = photos.length <= 1;
   }
 
   // =========================================
@@ -290,6 +390,14 @@
     if (photos.length <= 1) return;
 
     currentIndex = (currentIndex + 1) % photos.length;
+
+    renderPhoto();
+  }
+
+  function previousPhoto() {
+    if (photos.length <= 1) return;
+
+    currentIndex = (currentIndex - 1 + photos.length) % photos.length;
 
     renderPhoto();
   }
@@ -426,9 +534,23 @@
 
   closeButton.addEventListener("click", stopProjector);
 
+  previousButton.addEventListener("click", previousPhoto);
+  nextButton.addEventListener("click", nextPhoto);
+
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && !overlay.hidden) {
+    if (overlay.hidden) return;
+
+    if (event.key === "Escape") {
       stopProjector();
+      return;
+    }
+
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      previousPhoto();
+    } else if (event.key === "ArrowRight") {
+      event.preventDefault();
+      nextPhoto();
     }
   });
 
